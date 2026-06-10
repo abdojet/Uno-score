@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<meta name="theme-color" content="#1e5f5f"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="CYRINE"/>
+<title>CYRINE للأزياء</title>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="https://i.ibb.co/m5hvjxTq/IMG-6548.jpg"/>
+<link rel="icon" type="image/png" href="https://i.ibb.co/m5hvjxTq/IMG-6548.jpg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:#f0f8f8;overscroll-behavior:none;}
+body{font-family:'Tajawal',sans-serif;-webkit-font-smoothing:antialiased;}
+#root{height:100%;}
+#splash{position:fixed;inset:0;background:#1e5f5f;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;transition:opacity .5s ease;}
+#splash.fade{opacity:0;pointer-events:none;}
+#splash .lg{font-size:44px;font-weight:900;color:#f0f8f8;letter-spacing:6px;font-style:italic;margin-bottom:6px;}
+#splash .sl{font-size:13px;color:#3aadad;letter-spacing:3px;margin-bottom:36px;}
+#splash .dt{width:8px;height:8px;background:#3aadad;border-radius:50%;animation:pulse 1.2s ease infinite;}
+@keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+#offline-bar{position:fixed;top:0;left:0;right:0;background:#c0392b;color:#fff;text-align:center;padding:8px;font-size:13px;font-weight:700;z-index:9998;display:none;font-family:'Tajawal',sans-serif;}
+#offline-bar.show{display:block;}
+#install-banner{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1e5f5f;color:#f0e8d8;border-radius:16px;padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.3);z-index:9999;max-width:340px;width:90%;font-family:'Tajawal',sans-serif;}
+#install-banner.hidden{display:none;}
+#install-banner .txt p{font-size:13px;font-weight:700;margin-bottom:2px;}
+#install-banner .txt span{font-size:11px;color:#6ecece;}
+#install-banner button{border:none;border-radius:10px;padding:7px 12px;cursor:pointer;font-family:'Tajawal',sans-serif;font-weight:700;font-size:12px;}
+#ios-guide{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:flex-end;justify-content:center;padding:16px;backdrop-filter:blur(4px);}
+#ios-guide.hidden{display:none;}
+#ios-guide .box{background:#fff;border-radius:20px;padding:24px;width:100%;max-width:400px;text-align:center;font-family:'Tajawal',sans-serif;}
+#ios-guide .box h3{font-size:18px;font-weight:800;color:#1e5f5f;margin-bottom:8px;}
+#ios-guide .stp{background:#f0f8f8;border-radius:12px;padding:12px 16px;margin-bottom:10px;text-align:right;display:flex;align-items:center;gap:12px;}
+#ios-guide .stp .n{width:26px;height:26px;background:#1e5f5f;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex-shrink:0;}
+#ios-guide .stp p{margin:0;font-size:13px;color:#1e5f5f;font-weight:600;}
+</style>
+</head>
+<body>
+<div id="splash"><div class="lg">CYRINE</div><div class="sl">للأزياء ◆</div><div class="dt"></div></div>
+<div id="offline-bar">📵 أنتِ غير متصلة — بعض المحتوى قد لا يظهر</div>
+<div id="install-banner" class="hidden">
+  <span style="font-size:28px;flex-shrink:0">📲</span>
+  <div class="txt" style="flex:1"><p>ثبّتي تطبيق CYRINE</p><span>تجربة أسرع على هاتفك</span></div>
+  <button style="background:rgba(255,255,255,.12);color:#f0e8d8;margin-left:4px" onclick="document.getElementById('install-banner').classList.add('hidden')">لاحقاً</button>
+  <button id="install-btn" style="background:#3aadad;color:#fff">تثبيت</button>
+</div>
+<div id="ios-guide" class="hidden">
+  <div class="box">
+    <div style="font-size:40px;margin-bottom:12px">📲</div>
+    <h3>ثبّتي CYRINE على هاتفك</h3>
+    <p style="font-size:13px;color:#2a5f5f;margin:8px 0 16px;line-height:1.8">اتبعي الخطوات أدناه في Safari</p>
+    <div class="stp"><div class="n">١</div><p>اضغطي زر المشاركة ⬆ في أسفل Safari</p></div>
+    <div class="stp"><div class="n">٢</div><p>اختاري <strong>"إضافة إلى الشاشة الرئيسية"</strong></p></div>
+    <div class="stp"><div class="n">٣</div><p>اضغطي <strong>"إضافة"</strong> في أعلى اليمين</p></div>
+    <button onclick="document.getElementById('ios-guide').classList.add('hidden')" style="width:100%;margin-top:8px;padding:13px;background:#1e5f5f;color:#fff;border:none;border-radius:12px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:15px;cursor:pointer">فهمت ✓</button>
+  </div>
+</div>
+<div id="root"></div>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});})}
+window.addEventListener('load',()=>{setTimeout(()=>{const s=document.getElementById('splash');s.classList.add('fade');setTimeout(()=>s.remove(),600);},1500);});
+const ob=document.getElementById('offline-bar');
+window.addEventListener('offline',()=>ob.classList.add('show'));
+window.addEventListener('online',()=>ob.classList.remove('show'));
+let dp=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;setTimeout(()=>{if(!window.matchMedia('(display-mode: standalone)').matches)document.getElementById('install-banner').classList.remove('hidden');},3000);});
+document.getElementById('install-btn').onclick=()=>{document.getElementById('install-banner').classList.add('hidden');if(dp){dp.prompt();dp.userChoice.then(()=>dp=null);}};
+window.addEventListener('appinstalled',()=>document.getElementById('install-banner').classList.add('hidden'));
+const isIos=/iphone|ipad|ipod/i.test(navigator.userAgent);
+const isSafari=/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+if(isIos&&isSafari&&!window.matchMedia('(display-mode: standalone)').matches&&!sessionStorage.getItem('iosg')){setTimeout(()=>{document.getElementById('ios-guide').classList.remove('hidden');sessionStorage.setItem('iosg','1');},4000);}
+</script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel" data-presets="react">
+const {useState,useEffect,useRef} = React;
+
+// ── Secure Cloud Sync via Netlify Function ────────────────────────────────────
+const SYNC_URL = "/.netlify/functions/sync";
+const ADMIN_TOKEN = "cyrine-admin-2026";
+
+async function jbRead() {
+  try {
+    const r = await fetch(SYNC_URL, { method:"GET" });
+    if (!r.ok) { console.error("Read failed:", r.status); return null; }
+    return await r.json();
+  } catch(e) { console.error("Read error:", e); return null; }
+}
+
+async function jbWrite(data) {
+  try {
+    const r = await fetch(SYNC_URL, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-token": ADMIN_TOKEN,
+      },
+      body: JSON.stringify(data),
+    });
+    if (!r.ok) { console.error("Write failed:", r.status); return false; }
+    return true;
+  } catch(e) { console.error("Write error:", e); return false; }
+}
+
+// ── Storage keys ──────────────────────────────────────────────────────────────
+const K = {
+  prods:   "cyr_prods_v4",
+  orders:  "cyr_orders_v4",
+  pass:    "cyr_pass_v4",
+  hero:    "cyr_hero_v4",
+  store:   "cyr_store_v4",
+  notifs:  "cyr_notifs_v4",
+  coupons: "cyr_coupons_v4",
+};
+const ls = {
+  get: (k,def) => { try { const r=localStorage.getItem(k); return r?JSON.parse(r):def; } catch { return def; } },
+  set: (k,v)   => { try { localStorage.setItem(k,JSON.stringify(v)); } catch {} },
+};
+
+const fmt = n => Number(n).toLocaleString("ar-LY") + " د.ل";
+
+// ── Default data ──────────────────────────────────────────────────────────────
+const DEF_PRODS = [
+  {id:1, name:"عباية كلاسيكية أنيقة", cat:"نساء",       sub:"عبايات",   price:189,old:240, sizes:["S","M","L","XL"],        colors:["#1a1a2e","#2d4a3e","#4a1942"], img:"https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?w=600&q=80", badge:"جديد",         r:4.9,rv:142,active:true},
+  {id:2, name:"فستان سهرة وردي فاخر", cat:"نساء",       sub:"فساتين",   price:320,old:420, sizes:["XS","S","M","L"],         colors:["#f4a5b9","#c084a0"],           img:"https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=600&q=80", badge:"تخفيض",        r:4.8,rv:98, active:true},
+  {id:3, name:"بلوزة كريمية ناعمة",   cat:"نساء",       sub:"بلوزات",   price:95, old:null,sizes:["S","M","L","XL"],        colors:["#e8f5f5","#e8d5c4"],           img:"https://images.unsplash.com/photo-1564257631407-4deb1f99d992?w=600&q=80", badge:null,            r:4.6,rv:67, active:true},
+  {id:4, name:"بنطلون قماش بيج",      cat:"نساء",       sub:"بناطيل",   price:140,old:180, sizes:["S","M","L","XL","XXL"],   colors:["#d4c5b0","#8b7355","#2d2d2d"], img:"https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&q=80", badge:null,            r:4.5,rv:54, active:true},
+  {id:5, name:"عباية مطرزة بالذهب",   cat:"نساء",       sub:"عبايات",   price:285,old:360, sizes:["S","M","L","XL"],        colors:["#1a1a2e","#2c1810"],           img:"https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600&q=80", badge:"الأكثر مبيعاً",r:5.0,rv:230,active:true},
+  {id:6, name:"كارديغان محبوك دافئ",  cat:"نساء",       sub:"كارديغان", price:165,old:null,sizes:["S","M","L"],             colors:["#c8b8a2","#8b7355"],           img:"https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600&q=80", badge:"جديد",         r:4.7,rv:83, active:true},
+  {id:7, name:"فستان بنفسجي للبنات",  cat:"أطفال بنات", sub:"فساتين",   price:75, old:95,  sizes:["2-3","4-5","6-7","8-9"], colors:["#c084fc","#f0abfc","#818cf8"], img:"https://images.unsplash.com/photo-1518831959646-742c3a14ebf6?w=600&q=80", badge:"جديد",         r:4.9,rv:76, active:true},
+  {id:8, name:"بيجامة نقشة قلوب",     cat:"أطفال بنات", sub:"بيجامات",  price:55, old:null,sizes:["2-3","4-5","6-7"],      colors:["#fda4af","#f9a8d4"],           img:"https://images.unsplash.com/photo-1519689680058-324335c77eba?w=600&q=80", badge:null,            r:4.8,rv:45, active:true},
+  {id:9, name:"طقم مدرسي بناتي",      cat:"أطفال بنات", sub:"طقم",      price:110,old:140, sizes:["4-5","6-7","8-9","10-11"],colors:["#1d4ed8","#7c3aed"],           img:"https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?w=600&q=80", badge:"تخفيض",        r:4.7,rv:62, active:true},
+  {id:10,name:"تنورة توتو وردية",     cat:"أطفال بنات", sub:"تنانير",   price:48, old:65,  sizes:["2-3","4-5","6-7"],      colors:["#fda4af","#f472b6"],           img:"https://images.unsplash.com/photo-1471286174890-9c112ffca5b4?w=600&q=80", badge:"الأكثر مبيعاً",r:5.0,rv:110,active:true},
+  {id:11,name:"طقم رياضي أولاد أزرق", cat:"أطفال أولاد",sub:"طقم",      price:98, old:125, sizes:["2-3","4-5","6-7","8-9"], colors:["#1d4ed8","#0f172a"],           img:"https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=600&q=80", badge:"جديد",         r:4.8,rv:89, active:true},
+  {id:12,name:"جينز أولاد كاجوال",    cat:"أطفال أولاد",sub:"بناطيل",   price:82, old:null,sizes:["4-5","6-7","8-9","10-11"],colors:["#1e3a5f","#374151"],           img:"https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=600&q=80", badge:null,            r:4.6,rv:53, active:true},
+  {id:13,name:"هودي ولادي مطبوع",     cat:"أطفال أولاد",sub:"هودي",     price:70, old:90,  sizes:["4-5","6-7","8-9"],      colors:["#dc2626","#1d4ed8","#16a34a"], img:"https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=600&q=80", badge:"تخفيض",        r:4.7,rv:41, active:true},
+  {id:14,name:"طقم مدرسي ولادي",      cat:"أطفال أولاد",sub:"طقم",      price:115,old:145, sizes:["6-7","8-9","10-11","12-13"],colors:["#1e3a5f","#374151"],          img:"https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?w=600&q=80", badge:"الأكثر مبيعاً",r:4.9,rv:134,active:true},
+];
+const DEF_HERO = { title:"أزياء تليق\nبكلّ لحظة", sub:"مجموعة ٢٠٢٦ ✦", desc:"نساء • بنات • أولاد", bg:"#1e5f5f" };
+const DEF_STORE = { name:"CYRINE للأزياء", phone:"00218928249630", whatsapp:"218928249630", city:"مصراتة", freeShip:300, shipCost:15, returnDays:14 };
+const DEF_BANK  = { bankName:"", iban:"", accountNum:"", accountHolder:"CYRINE للأزياء" };
+const DEF_FAQ   = [
+  { q:"كيف أطلب منتجاً؟", a:"أضيفي المنتج للسلة ثم اضغطي على زر إرسال الطلب عبر واتساب وسنتواصل معك فوراً." },
+  { q:"ما هي مناطق التوصيل؟", a:"نوصّل لجميع مناطق ليبيا. التوصيل داخل مصراتة خلال 24 ساعة." },
+  { q:"ما هي سياسة الإرجاع؟", a:"يمكنك الإرجاع خلال 14 يوماً من الاستلام بشرط أن يكون المنتج بحالته الأصلية." },
+  { q:"هل الشحن مجاني؟", a:"نعم! الشحن مجاني للطلبات التي تتجاوز 300 د.ل." },
+];
+const K_BANK = "cyrine_bank_v1";
+const K_FAQ  = "cyrine_faq_v1";
+const K_ADDR = "cyrine_addr_v1";
+const DEF_COUPONS = [{ code:"CYRINE10", discount:10, type:"percent", active:true }];
+const CATS  = ["نساء","أطفال بنات","أطفال أولاد"];
+const MCATS = ["الكل","نساء","أطفال بنات","أطفال أولاد"];
+const ICONS = {"الكل":"✦","نساء":"👗","أطفال بنات":"🎀","أطفال أولاد":"⚽"};
+const BADGES = ["بدون","جديد","تخفيض","الأكثر مبيعاً"];
+const ORDER_STATUS = ["معلّق","مؤكد","جاري التجهيز","في الطريق","تم التسليم","ملغي"];
+const STATUS_COLOR = {"معلّق":"#f59e0b","مؤكد":"#3b82f6","جاري التجهيز":"#8b5cf6","في الطريق":"#06b6d4","تم التسليم":"#22c55e","ملغي":"#ef4444"};
+
+const Stars = ({r}) => <span style={{color:"#5ecece",fontSize:"11px"}}>{"★".repeat(Math.floor(r))}{"☆".repeat(5-Math.floor(r))}<span style={{color:"#7ab8b8",fontSize:"10px"}}> ({r})</span></span>;
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  ROOT APP
+// ═══════════════════════════════════════════════════════════════════════════════
+function App() {
+  const [prods,   setProds]   = useState(() => ls.get(K.prods, DEF_PRODS));
+  const [orders,  setOrders]  = useState(() => ls.get(K.orders, []));
+  const [hero,    setHero]    = useState(() => ls.get(K.hero, DEF_HERO));
+  const [storeInfo,setStoreInfo]=useState(() => ls.get(K.store, DEF_STORE));
+  const [coupons, setCoupons] = useState(() => ls.get(K.coupons, DEF_COUPONS));
+  const [adminPass,setAdminPass]=useState(() => ls.get(K.pass, "cyrine2026"));
+  const [bankInfo, setBankInfo]= useState(() => ls.get(K_BANK, DEF_BANK));
+  const [faqList,  setFaqList] = useState(() => ls.get(K_FAQ,  DEF_FAQ));
+  const [storeAddr,setStoreAddr]=useState(() => ls.get(K_ADDR, { address:"", mapLink:"" }));
+  const [syncing,  setSyncing] = useState(false);
+  const [lastSync, setLastSync]= useState(null);
+
+  // ── Load from cloud on startup ──
+  useEffect(()=>{
+    setSyncing(true);
+    jbRead().then(data=>{
+      if(data){
+        const d=data.record||data;if(d.products  && d.products.length>0)  { setProds(d.products);    ls.set(K.prods,   d.products); }
+        if(d.hero      && d.hero.title)          { setHero(d.hero);         ls.set(K.hero,    d.hero); }
+        if(d.storeInfo && d.storeInfo.name)      { setStoreInfo(d.storeInfo);ls.set(K.store,  d.storeInfo); }
+        if(d.coupons)                               { setCoupons(d.coupons);   ls.set(K.coupons, d.coupons); }
+        if(d.bankInfo)                              { setBankInfo(d.bankInfo); ls.set(K_BANK,    d.bankInfo); }
+        if(d.faqList)                               { setFaqList(d.faqList);   ls.set(K_FAQ,     d.faqList); }
+        setLastSync(new Date().toLocaleTimeString("ar-LY",{hour:"2-digit",minute:"2-digit"}));
+      }
+      setSyncing(false);
+    });
+    // Refresh every 30 seconds for customers
+    const interval = setInterval(()=>{
+      jbRead().then(data=>{
+        if(data){
+          const d=data.record||data;if(d.products  && d.products.length>0)  { setProds(d.products);    ls.set(K.prods,   d.products); }
+          if(d.hero      && d.hero.title)          { setHero(d.hero);         ls.set(K.hero,    d.hero); }
+          if(d.storeInfo && d.storeInfo.name)      { setStoreInfo(d.storeInfo);ls.set(K.store,  d.storeInfo); }
+          if(d.coupons)                               { setCoupons(d.coupons);   ls.set(K.coupons, d.coupons); }
+          if(d.bankInfo)                              { setBankInfo(d.bankInfo); ls.set(K_BANK,    d.bankInfo); }
+          if(d.faqList)                               { setFaqList(d.faqList);   ls.set(K_FAQ,     d.faqList); }
+          setLastSync(new Date().toLocaleTimeString("ar-LY",{hour:"2-digit",minute:"2-digit"}));
+        }
+      });
+    }, 30000);
+    return ()=>clearInterval(interval);
+  },[]);
+
+  // ── Save to cloud (admin only) ──
+  function syncToCloud(overrides={}) {
+    const data = {
+      products:  overrides.products  !== undefined ? overrides.products  : prods,
+      hero:      overrides.hero      !== undefined ? overrides.hero      : hero,
+      storeInfo: overrides.storeInfo !== undefined ? overrides.storeInfo : storeInfo,
+      coupons:   overrides.coupons   !== undefined ? overrides.coupons   : coupons,
+      bankInfo:  overrides.bankInfo  !== undefined ? overrides.bankInfo  : bankInfo,
+      faqList:   overrides.faqList   !== undefined ? overrides.faqList   : faqList,
+    };
+    setSyncing(true);
+    jbWrite(data).then(ok=>{
+      setSyncing(false);
+      if(ok){
+        setLastSync(new Date().toLocaleTimeString("ar-LY",{hour:"2-digit",minute:"2-digit"}));
+        showToast("☁️ تم النشر للجميع");
+      } else {
+        showToast("❌ فشل النشر — تحققي من الاتصال","err");
+      }
+    });
+  }
+  const [screen,  setScreen]  = useState("home");
+  const [selP,    setSelP]    = useState(null);
+  const [cart,    setCart]    = useState([]);
+  const [wish,    setWish]    = useState([]);
+  const [search,  setSearch]  = useState("");
+  const [cat,     setCat]     = useState("الكل");
+  const [step,    setStep]    = useState(0);
+  const [toast,   setToast]   = useState(null);
+  const [adminOpen,setAdminOpen]=useState(false);
+  const [authed,  setAuthed]  = useState(false);
+  const [navTab,  setNavTab]  = useState("home");
+  const [couponInput,setCouponInput]=useState("");
+  const [appliedCoupon,setAppliedCoupon]=useState(null);
+  const [lastOrder,setLastOrder]=useState(null);
+
+  useEffect(()=>{ ls.set(K.prods,   prods);   },[prods]);
+  useEffect(()=>{ ls.set(K.orders,  orders);  },[orders]);
+  useEffect(()=>{ ls.set(K.hero,    hero);    },[hero]);
+  useEffect(()=>{ ls.set(K.store,   storeInfo);},[storeInfo]);
+  useEffect(()=>{ ls.set(K.coupons, coupons); },[coupons]);
+  useEffect(()=>{ ls.set(K.pass,    adminPass);},[adminPass]);
+  useEffect(()=>{ ls.set(K_BANK,    bankInfo); },[bankInfo]);
+  useEffect(()=>{ ls.set(K_FAQ,     faqList);  },[faqList]);
+  useEffect(()=>{ ls.set(K_ADDR,    storeAddr);},[storeAddr]);
+
+  const activeProds = prods.filter(p=>p.active!==false);
+  const cnt   = cart.reduce((s,i)=>s+i.qty,0);
+  const subtotal = cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const ship  = subtotal >= storeInfo.freeShip ? 0 : storeInfo.shipCost;
+  const couponDiscount = appliedCoupon ? (appliedCoupon.type==="percent" ? Math.round(subtotal*appliedCoupon.discount/100) : appliedCoupon.discount) : 0;
+  const total = subtotal + ship - couponDiscount;
+
+  function showToast(msg,type="ok"){setToast({msg,type});setTimeout(()=>setToast(null),2400);}
+
+  function addCart(p,size,color){
+    const key=`${p.id}-${size}-${color}`;
+    setCart(prev=>{const ex=prev.find(i=>i.key===key);if(ex)return prev.map(i=>i.key===key?{...i,qty:i.qty+1}:i);return[...prev,{key,...p,size,color,qty:1}];});
+    showToast("✓ أُضيف إلى السلة");
+  }
+  function remCart(key){setCart(p=>p.filter(i=>i.key!==key));}
+  function updQty(key,d){setCart(p=>p.map(i=>i.key===key?{...i,qty:Math.max(1,i.qty+d)}:i));}
+  function togWish(id){setWish(p=>p.includes(id)?p.filter(x=>x!==id):[...p,id]);}
+
+  function applyCoupon(code){
+    const c=coupons.find(c=>c.code.toUpperCase()===code.toUpperCase()&&c.active);
+    if(c){setAppliedCoupon(c);showToast(`✓ كوبون "${c.code}" مفعّل! خصم ${c.discount}${c.type==="percent"?"%":" د.ل"}`);}
+    else showToast("❌ كود الكوبون غير صحيح","err");
+  }
+
+  function placeOrder(form){
+    const order={
+      id:"CYR-"+Math.floor(10000+Math.random()*90000),
+      date:new Date().toLocaleDateString("ar-LY"),
+      time:new Date().toLocaleTimeString("ar-LY",{hour:"2-digit",minute:"2-digit"}),
+      items:[...cart],subtotal,ship,couponDiscount,total,
+      customer:form,status:"معلّق",
+    };
+    setOrders(prev=>[order,...prev]);
+    setLastOrder(order);
+    setCart([]);setStep(0);setAppliedCoupon(null);setCouponInput("");
+    setScreen("done");
+  }
+
+  function back(){
+    const map={product:"home",cart:"home",checkout:"cart",done:"home",wishlist:"home",account:"home",orders:"home"};
+    setScreen(map[screen]||"home");
+    if(map[screen]==="home"||screen==="home")setNavTab("home");
+  }
+
+  function goNav(tab){
+    setNavTab(tab);
+    if(tab==="home")    setScreen("home");
+    if(tab==="wish")    setScreen("wishlist");
+    if(tab==="account") setScreen("account");
+  }
+
+  const filtered = activeProds.filter(p=>(cat==="الكل"||p.cat===cat)&&(!search||p.name.includes(search)||p.sub.includes(search)));
+  const wishProds = activeProds.filter(p=>wish.includes(p.id));
+
+  const mainScreens = ["home","wishlist","account"];
+  const showNav = mainScreens.includes(screen)||screen==="product";
+
+  return (
+    <div dir="rtl" style={{fontFamily:"'Tajawal',sans-serif",background:"#f0f8f8",minHeight:"100vh",maxWidth:"480px",margin:"0 auto",position:"relative",overflowX:"hidden"}}>
+      <style>{`
+        *{box-sizing:border-box;}
+        input,button,select,textarea{font-family:inherit;}
+        ::-webkit-scrollbar{width:3px;height:3px;}
+        ::-webkit-scrollbar-thumb{background:#c8b8a2;border-radius:4px;}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+        @keyframes popIn{from{opacity:0;transform:translate(-50%,-10px)}to{opacity:1;transform:translate(-50%,0)}}
+        .card:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(30,95,95,.12)!important;}
+        .card{transition:transform .2s,box-shadow .2s;}
+        .gh:hover{background:#2a9090!important;}
+        .qbh:hover{background:#d8f0f0!important;}
+        input:focus,select:focus,textarea:focus{border-color:#3aadad!important;outline:none;}
+        .ar:hover{background:#e8f8f8!important;}
+        .dbh:hover{background:#fee2e2!important;color:#dc2626!important;}
+        .ebh:hover{background:#fef3c7!important;color:#92400e!important;}
+        button:active{opacity:.85;}
+      `}</style>
+
+      {toast&&<div style={{position:"fixed",top:"68px",left:"50%",transform:"translateX(-50%)",padding:"10px 24px",borderRadius:"100px",fontSize:"13px",fontWeight:"600",zIndex:9999,animation:"popIn .3s ease",whiteSpace:"nowrap",boxShadow:"0 8px 28px rgba(0,0,0,.22)",background:toast.type==="err"?"#b91c1c":toast.type==="warn"?"#d97706":"#1e5f5f",color:"#f0e8d8"}}>{toast.msg}</div>}
+
+      {/* HEADER */}
+      <header style={{position:"sticky",top:0,zIndex:200,background:"rgba(240,248,248,.97)",backdropFilter:"blur(14px)",borderBottom:"1px solid #cce8e8",paddingTop:"env(safe-area-inset-top)"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"11px 16px"}}>
+          {!mainScreens.includes(screen)
+            ? <button onClick={back} style={S.iconBtn}>←</button>
+            : <button onClick={()=>setAdminOpen(true)} style={S.iconBtn} title="لوحة التحكم">⚙️</button>
+          }
+          <div style={{display:"flex",alignItems:"baseline",gap:"4px",cursor:"pointer"}} onClick={()=>{setScreen("home");setNavTab("home");}}>
+            <span style={{fontSize:"13px",color:"#3aadad"}}>◆</span>
+            <span style={{fontSize:"23px",fontWeight:"900",letterSpacing:"3px",color:"#1e5f5f",fontStyle:"italic"}}>{storeInfo.name.split(" ")[0]||"CYRINE"}</span>
+            <span style={{fontSize:"10px",color:"#7ab8b8",letterSpacing:"1px"}}>للأزياء</span>
+            {syncing&&<span style={{fontSize:"9px",color:"#3aadad",marginRight:"4px"}}>⏳</span>}
+          </div>
+          <button onClick={()=>{setScreen("cart");setNavTab("");}} style={{position:"relative",background:"#1e5f5f",border:"none",borderRadius:"12px",width:"44px",height:"44px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
+            <span style={{fontSize:"19px"}}>🛍</span>
+            {cnt>0&&<span style={{position:"absolute",top:"-6px",right:"-6px",background:"#c0392b",color:"#fff",borderRadius:"50%",width:"18px",height:"18px",fontSize:"10px",fontWeight:"800",display:"flex",alignItems:"center",justifyContent:"center",border:"2px solid #f0f8f8"}}>{cnt}</span>}
+          </button>
+        </div>
+      </header>
+
+      <main style={{paddingBottom: showNav?"80px":"0"}}>
+        {screen==="home"     && <Home prods={filtered} cat={cat} setCat={setCat} search={search} setSearch={setSearch} setSelP={setSelP} setScreen={setScreen} wish={wish} togWish={togWish} hero={hero} addCart={addCart}/>}
+        {screen==="product"  && <ProdPage p={selP} addCart={addCart} setScreen={setScreen} wish={wish} togWish={togWish} storeInfo={storeInfo}/>}
+        {screen==="cart"     && <CartPage cart={cart} remCart={remCart} updQty={updQty} subtotal={subtotal} ship={ship} total={total} couponInput={couponInput} setCouponInput={setCouponInput} appliedCoupon={appliedCoupon} setAppliedCoupon={setAppliedCoupon} couponDiscount={couponDiscount} applyCoupon={applyCoupon} setScreen={setScreen} storeInfo={storeInfo}/>}
+        {screen==="checkout" && <Checkout cart={cart} subtotal={subtotal} ship={ship} total={total} couponDiscount={couponDiscount} appliedCoupon={appliedCoupon} step={step} setStep={setStep} placeOrder={placeOrder} storeInfo={storeInfo} bankInfo={bankInfo}/>}
+        {screen==="done"     && <Done order={lastOrder} setScreen={setScreen} setNavTab={setNavTab}/>}
+        {screen==="wishlist" && <WishPage prods={wishProds} setSelP={setSelP} setScreen={setScreen} togWish={togWish}/>}
+        {screen==="account"  && <Account orders={orders} setScreen={setScreen} storeInfo={storeInfo}/>}
+        {screen==="orders"   && <OrdersPage orders={orders} setOrders={setOrders} showToast={showToast}/>}
+      </main>
+
+      {showNav&&(
+        <nav style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:"480px",display:"flex",justifyContent:"space-around",paddingTop:"8px",paddingBottom:"calc(14px + env(safe-area-inset-bottom))",background:"rgba(240,248,248,.97)",backdropFilter:"blur(14px)",borderTop:"1px solid #cce8e8",zIndex:100}}>
+          {[["🏠","الرئيسية","home"],["❤️","المفضلة","wish"],["👤","حسابي","account"]].map(([ic,lb,id])=>(
+            <button key={id} onClick={()=>goNav(id)} style={{display:"flex",flexDirection:"column",alignItems:"center",background:"none",border:"none",cursor:"pointer",color:navTab===id?"#1e5f5f":"#7ab8b8",fontFamily:"inherit",padding:"4px 20px",gap:"1px",transition:"color .15s",position:"relative"}}>
+              <span style={{fontSize:"20px"}}>{ic}</span>
+              <span style={{fontSize:"9px",marginTop:"1px"}}>{lb}</span>
+              {id==="wish"&&wish.length>0&&<span style={{position:"absolute",top:0,right:"14px",background:"#c0392b",color:"#fff",borderRadius:"50%",width:"14px",height:"14px",fontSize:"8px",fontWeight:"800",display:"flex",alignItems:"center",justifyContent:"center"}}>{wish.length}</span>}
+            </button>
+          ))}
+        </nav>
+      )}
+
+      {adminOpen&&<AdminPanel prods={prods} setProds={setProds} orders={orders} setOrders={setOrders} hero={hero} setHero={setHero} storeInfo={storeInfo} setStoreInfo={setStoreInfo} coupons={coupons} setCoupons={setCoupons} adminPass={adminPass} setAdminPass={setAdminPass} bankInfo={bankInfo} setBankInfo={setBankInfo} faqList={faqList} setFaqList={setFaqList} storeAddr={storeAddr} setStoreAddr={setStoreAddr} syncToCloud={syncToCloud} lastSync={lastSync} syncing={syncing} onClose={()=>setAdminOpen(false)} toast={showToast} authed={authed} setAuthed={setAuthed} DEF_PRODS={DEF_PRODS}/>}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  HOME
+// ═══════════════════════════════════════════════════════════════════════════════
+function Home({prods,cat,setCat,search,setSearch,setSelP,setScreen,wish,togWish,hero,addCart}){
+  return(
+    <div style={{animation:"fadeIn .3s ease"}}>
+      <div style={{position:"relative",background:hero.bg||"#1e5f5f",padding:"32px 20px 40px",overflow:"hidden"}}>
+        <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse at 80% 20%,rgba(90,200,200,0.25),transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(0,80,80,0.3),transparent 50%)"}}/>
+        <div style={{position:"relative",zIndex:2}}>
+          <p style={{fontSize:"11px",letterSpacing:"3px",color:"#a8e8e8",marginBottom:"10px"}}>{hero.sub}</p>
+          <h1 style={{fontSize:"36px",fontWeight:"900",color:"#ffffff",lineHeight:"1.1",marginBottom:"10px",whiteSpace:"pre-line"}}>{hero.title}</h1>
+          <p style={{fontSize:"13px",color:"#c0f0f0",letterSpacing:"2px"}}>{hero.desc}</p>
+        </div>
+      </div>
+      <div style={{padding:"14px 16px 4px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:"10px",background:"#fff",border:"1.5px solid #cce8e8",borderRadius:"14px",padding:"0 14px",height:"46px",boxShadow:"0 1px 6px rgba(0,0,0,.04)"}}>
+          <span style={{color:"#7ab8b8"}}>🔍</span>
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="ابحثي عن قطعة..." style={{flex:1,border:"none",outline:"none",background:"none",fontSize:"14px"}}/>
+          {search&&<button onClick={()=>setSearch("")} style={{background:"none",border:"none",cursor:"pointer",color:"#7ab8b8",padding:"4px"}}>✕</button>}
+        </div>
+      </div>
+      <div style={{display:"flex",gap:"8px",padding:"12px 16px 8px",overflowX:"auto",scrollbarWidth:"none"}}>
+        {MCATS.map(c=>(
+          <button key={c} onClick={()=>setCat(c)} style={{flexShrink:0,display:"flex",alignItems:"center",gap:"5px",padding:"8px 16px",borderRadius:"100px",border:"1.5px solid",borderColor:cat===c?"#1e5f5f":"#cce8e8",background:cat===c?"#1e5f5f":"#fff",color:cat===c?"#f0e8d8":"#2a5f5f",fontSize:"13px",fontWeight:"600",cursor:"pointer",transition:"all .18s"}}>
+            <span>{ICONS[c]}</span><span>{c}</span>
+          </button>
+        ))}
+      </div>
+      <div style={{padding:"0 16px 8px",display:"flex",alignItems:"center",gap:"8px"}}>
+        <span style={{fontSize:"12px",color:"#7ab8b8"}}>{prods.length} منتج</span>
+        <div style={{flex:1,height:"1px",background:"#cce8e8"}}/>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px",padding:"0 12px"}}>
+        {prods.map((p,i)=>(
+          <div key={p.id} className="card" style={{background:"#fff",borderRadius:"18px",overflow:"hidden",boxShadow:"0 2px 12px rgba(30,95,95,.07)",position:"relative",cursor:"pointer",animation:"fadeUp .4s ease both",animationDelay:i*45+"ms"}}>
+            <div onClick={()=>{setSelP(p);setScreen("product");}}>
+              <div style={{paddingTop:"110%",position:"relative",overflow:"hidden",background:"#e8f5f5"}}>
+                <img src={p.img} alt={p.name} loading="lazy" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+              </div>
+              {p.badge&&<span style={{position:"absolute",top:"8px",right:"8px",color:"#fff",fontSize:"9px",fontWeight:"800",padding:"4px 8px",borderRadius:"6px",background:p.badge==="تخفيض"?"#c0392b":p.badge==="الأكثر مبيعاً"?"#3aadad":"#1e5f5f"}}>{p.badge}</span>}
+              {p.old&&<span style={{position:"absolute",top:"8px",left:"8px",background:"#c0392b",color:"#fff",fontSize:"9px",fontWeight:"800",padding:"4px 8px",borderRadius:"6px"}}>-{Math.round((1-p.price/p.old)*100)}%</span>}
+            </div>
+            <button onClick={()=>togWish(p.id)} style={{position:"absolute",top:"calc(110% - 10px)",left:"8px",transform:"translateY(-100%)",background:"rgba(255,255,255,.9)",border:"none",borderRadius:"50%",width:"32px",height:"32px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"14px",boxShadow:"0 2px 6px rgba(0,0,0,.1)"}}>
+              {wish.includes(p.id)?"❤️":"🤍"}
+            </button>
+            <div style={{padding:"10px 12px 4px",cursor:"pointer"}} onClick={()=>{setSelP(p);setScreen("product");}}>
+              <p style={{fontSize:"9px",color:"#7ab8b8",textTransform:"uppercase",letterSpacing:"1px",marginBottom:"3px"}}>{p.cat} · {p.sub}</p>
+              <p style={{fontSize:"13px",fontWeight:"700",color:"#1e5f5f",lineHeight:"1.3",marginBottom:"4px"}}>{p.name}</p>
+              <Stars r={p.r}/>
+              <div style={{display:"flex",alignItems:"baseline",gap:"6px",marginTop:"5px"}}>
+                <span style={{fontSize:"15px",fontWeight:"800",color:"#3aadad"}}>{fmt(p.price)}</span>
+                {p.old&&<span style={{fontSize:"11px",color:"#88cccc",textDecoration:"line-through"}}>{fmt(p.old)}</span>}
+              </div>
+            </div>
+            <div style={{display:"flex",gap:"6px",padding:"8px 10px 10px"}}>
+              <button className="gh" onClick={()=>{addCart(p,p.sizes[0],p.colors[0]);}} style={{flex:1,padding:"9px 6px",background:"#fff",color:"#1e5f5f",border:"2px solid #1e5f5f",borderRadius:"10px",cursor:"pointer",fontSize:"12px",fontWeight:"800",transition:"all .15s"}}>+ سلة</button>
+              <button className="gh" onClick={()=>{setSelP(p);setScreen("product");}} style={{flex:1,padding:"9px 6px",background:"#1e5f5f",color:"#f0e8d8",border:"none",borderRadius:"10px",cursor:"pointer",fontSize:"12px",fontWeight:"700",transition:"background .15s"}}>التفاصيل ←</button>
+            </div>
+          </div>
+        ))}
+      </div>
+      {prods.length===0&&<div style={{textAlign:"center",padding:"60px 20px",color:"#7ab8b8"}}><div style={{fontSize:"48px",marginBottom:"12px"}}>🔍</div><p>لا توجد نتائج</p></div>}
+      <div style={{height:"20px"}}/>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  PRODUCT PAGE
+// ═══════════════════════════════════════════════════════════════════════════════
+function ProdPage({p,addCart,setScreen,wish,togWish,storeInfo}){
+  const [sz,setSz]=useState(p.sizes[0]);
+  const [cl,setCl]=useState(p.colors[0]);
+  const [qty,setQty]=useState(1);
+  const [tab,setTab]=useState("d");
+  const kid=p.cat.includes("أطفال");
+  return(
+    <div style={{animation:"fadeIn .3s ease",paddingBottom:"160px"}}>
+      <div style={{position:"relative",paddingTop:"95%",overflow:"hidden",background:"#e8f5f5"}}>
+        <img src={p.img} alt={p.name} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(30,95,95,.35),transparent 55%)"}}/>
+        {p.badge&&<span style={{position:"absolute",top:"16px",right:"16px",color:"#fff",fontSize:"12px",fontWeight:"700",padding:"5px 12px",borderRadius:"8px",background:p.badge==="تخفيض"?"#c0392b":p.badge==="الأكثر مبيعاً"?"#3aadad":"#1e5f5f"}}>{p.badge}</span>}
+        <button onClick={()=>togWish(p.id)} style={{position:"absolute",top:"16px",left:"16px",background:"rgba(255,255,255,.9)",border:"none",borderRadius:"50%",width:"42px",height:"42px",fontSize:"20px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(0,0,0,.15)"}}>
+          {wish.includes(p.id)?"❤️":"🤍"}
+        </button>
+      </div>
+      <div style={{padding:"20px 16px"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"12px"}}>
+          <div style={{flex:1}}>
+            <p style={{fontSize:"11px",color:"#7ab8b8",letterSpacing:"1.5px",marginBottom:"5px",textTransform:"uppercase"}}>{p.cat} · {p.sub}</p>
+            <h2 style={{fontSize:"22px",fontWeight:"800",color:"#1e5f5f",marginBottom:"6px"}}>{p.name}</h2>
+            <Stars r={p.r}/><span style={{fontSize:"11px",color:"#88cccc",marginRight:"4px"}}>{p.rv} تقييم</span>
+          </div>
+          <div style={{textAlign:"left",flexShrink:0}}>
+            <p style={{fontSize:"24px",fontWeight:"900",color:"#1e5f5f"}}>{fmt(p.price)}</p>
+            {p.old&&<p style={{fontSize:"13px",color:"#88cccc",textDecoration:"line-through"}}>{fmt(p.old)}</p>}
+          </div>
+        </div>
+        <div style={{marginTop:"20px"}}>
+          <p style={S.lbl}>اللون</p>
+          <div style={{display:"flex",gap:"10px",marginTop:"8px"}}>
+            {p.colors.map(c=>(<button key={c} onClick={()=>setCl(c)} style={{width:"34px",height:"34px",borderRadius:"50%",background:c,cursor:"pointer",border:cl===c?"3px solid #3aadad":"2.5px solid #b8e0e0",boxShadow:cl===c?"0 0 0 2px #fff,0 0 0 4px #3aadad":"none",transition:"all .15s"}}/>))}
+          </div>
+        </div>
+        <div style={{marginTop:"20px"}}>
+          <p style={S.lbl}>{kid?"العمر (سنوات)":"المقاس"}</p>
+          <div style={{display:"flex",flexWrap:"wrap",gap:"8px",marginTop:"8px"}}>
+            {p.sizes.map(s=>(<button key={s} onClick={()=>setSz(s)} style={{padding:"8px 16px",borderRadius:"10px",border:"2px solid",borderColor:sz===s?"#3aadad":"#b8e0e0",background:sz===s?"#3aadad":"#fff",color:sz===s?"#fff":"#2a5f5f",fontWeight:"600",fontSize:"13px",cursor:"pointer",transition:"all .15s"}}>{s}</button>))}
+          </div>
+        </div>
+        <div style={{marginTop:"20px"}}>
+          <p style={S.lbl}>الكمية</p>
+          <div style={{display:"flex",alignItems:"center",gap:"14px",marginTop:"8px"}}>
+            <button className="qbh" onClick={()=>setQty(q=>Math.max(1,q-1))} style={S.qb}>−</button>
+            <span style={{fontSize:"20px",fontWeight:"800",color:"#1e5f5f",minWidth:"28px",textAlign:"center"}}>{qty}</span>
+            <button className="qbh" onClick={()=>setQty(q=>q+1)} style={S.qb}>+</button>
+          </div>
+        </div>
+        <div style={{marginTop:"24px",borderBottom:"1.5px solid #cce8e8"}}>
+          <div style={{display:"flex",gap:"4px"}}>
+            {[["d","الوصف"],["s","الشحن"],["r","الإرجاع"]].map(([k,v])=>(<button key={k} onClick={()=>setTab(k)} style={{padding:"10px 14px",background:"none",border:"none",cursor:"pointer",fontSize:"13px",fontWeight:tab===k?"700":"400",color:tab===k?"#3aadad":"#7ab8b8",borderBottom:tab===k?"2.5px solid #3aadad":"2.5px solid transparent",transition:"all .18s",marginBottom:"-1.5px"}}>{v}</button>))}
+          </div>
+        </div>
+        <p style={{padding:"14px 0",fontSize:"14px",color:"#2a5f5f",lineHeight:"1.9"}}>
+          {tab==="d"&&(p.desc||(kid?"قطعة مصممة خصيصاً للأطفال من أقمشة ناعمة آمنة على البشرة الحساسة.":"قطعة مصممة بعناية من أقمشة عالية الجودة تجمع بين الأناقة والراحة."))}
+          {tab==="s"&&`توصيل داخل ${storeInfo.city} خلال ٢٤ ساعة • المدن الأخرى ٢-٤ أيام • شحن مجاني فوق ${fmt(storeInfo.freeShip)}`}
+          {tab==="r"&&`حق الإرجاع والاستبدال خلال ${storeInfo.returnDays} يوماً بشرط المحافظة على حالة المنتج الأصلية`}
+        </p>
+      </div>
+      <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:"480px",display:"flex",gap:"10px",padding:"12px 16px",paddingBottom:"calc(24px + env(safe-area-inset-bottom))",background:"#f0f8f8",borderTop:"2px solid #cce8e8",zIndex:300,boxShadow:"0 -4px 20px rgba(0,0,0,.08)"}}>
+        <button onClick={()=>{addCart(p,sz,cl);}} style={{flex:"0 0 100px",padding:"14px",background:"#fff",color:"#1e5f5f",border:"2px solid #1e5f5f",borderRadius:"14px",cursor:"pointer",fontSize:"14px",fontWeight:"900"}}>+ سلة</button>
+        <button className="gh" onClick={()=>{for(let i=0;i<qty;i++)addCart(p,sz,cl);setScreen("cart");}} style={{flex:1,padding:"14px",background:"#3aadad",color:"#fff",border:"none",borderRadius:"14px",cursor:"pointer",fontSize:"15px",fontWeight:"800",transition:"background .15s"}}>اشتري الآن ←</button>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  CART
+// ═══════════════════════════════════════════════════════════════════════════════
+function CartPage({cart,remCart,updQty,subtotal,ship,total,couponInput,setCouponInput,appliedCoupon,setAppliedCoupon,couponDiscount,applyCoupon,setScreen,storeInfo}){
+  const [showForm,setShowForm]=useState(false);
+  const [name,setName]=useState("");
+  const [phone,setPhone]=useState("");
+  const [note,setNote]=useState("");
+  const [err,setErr]=useState("");
+
+  function buildWhatsappMsg(){
+    let msg=`🛍 *طلب جديد من CYRINE*\n\n`;
+    msg+=`👤 *الاسم:* ${name}\n`;
+    msg+=`📱 *الهاتف:* ${phone}\n`;
+    if(note) msg+=`📝 *ملاحظة:* ${note}\n`;
+    msg+=`\n*المنتجات:*\n`;
+    cart.forEach(i=>{
+      msg+=`• ${i.name} | مقاس: ${i.size} | الكمية: ${i.qty} | ${fmt(i.price*i.qty)}\n`;
+    });
+    msg+=`\n━━━━━━━━━━━━━━━\n`;
+    msg+=`💰 *المجموع:* ${fmt(subtotal)}\n`;
+    if(ship>0) msg+=`🚚 *الشحن:* ${fmt(ship)}\n`;
+    else msg+=`🚚 *الشحن:* مجاني 🎉\n`;
+    if(appliedCoupon) msg+=`🏷 *الخصم:* - ${fmt(couponDiscount)}\n`;
+    msg+=`✅ *الإجمالي:* ${fmt(total)}\n`;
+    return encodeURIComponent(msg);
+  }
+
+  function sendOrder(){
+    if(!name.trim()){setErr("الرجاء إدخال الاسم");return;}
+    if(!phone.trim()||phone.length<7){setErr("الرجاء إدخال رقم هاتف صحيح");return;}
+    const wa=storeInfo.whatsapp||"218910000000";
+    const msg=buildWhatsappMsg();
+    window.open(`https://wa.me/${wa}?text=${msg}`,"_blank");
+    setShowForm(false);
+    setScreen("done");
+  }
+
+  return(
+    <div style={{padding:"20px 16px",animation:"fadeIn .3s ease",paddingBottom:"40px"}}>
+      <h2 style={{fontSize:"22px",fontWeight:"800",color:"#1e5f5f",marginBottom:"16px"}}>سلة التسوق {cart.length>0&&<span style={{fontSize:"14px",color:"#7ab8b8",fontWeight:"400"}}>({cart.length})</span>}</h2>
+      {cart.length===0?(
+        <div style={{textAlign:"center",padding:"60px 0"}}>
+          <div style={{fontSize:"60px",marginBottom:"16px"}}>🛍</div>
+          <p style={{color:"#7ab8b8",marginBottom:"24px"}}>سلتك فارغة</p>
+          <button className="gh" onClick={()=>setScreen("home")} style={{padding:"13px 32px",background:"#3aadad",color:"#fff",border:"none",borderRadius:"14px",cursor:"pointer",fontSize:"15px",fontWeight:"800",transition:"background .15s"}}>تصفحي المنتجات</button>
+        </div>
+      ):(
+        <>
+          {/* Free shipping banner */}
+          <div style={{background:ship===0?"#edf7ed":"#fef8ec",border:"1px solid",borderColor:ship===0?"#86c986":"#f0d070",borderRadius:"12px",padding:"10px 14px",fontSize:"13px",color:ship===0?"#2e7d2e":"#92700a",fontWeight:"600",marginBottom:"14px"}}>
+            {ship===0?"🎉 تهانيك! شحنك مجاني":"أضيفي "+fmt(storeInfo.freeShip-subtotal)+" للشحن المجاني"}
+          </div>
+
+          {/* Cart items */}
+          <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+            {cart.map(item=>(
+              <div key={item.key} style={{display:"flex",gap:"12px",alignItems:"center",background:"#fff",borderRadius:"14px",padding:"12px",border:"1px solid #f0ebe2"}}>
+                <img src={item.img} alt={item.name} style={{width:"72px",height:"72px",borderRadius:"10px",objectFit:"cover",flexShrink:0}}/>
+                <div style={{flex:1,minWidth:0}}>
+                  <p style={{fontWeight:"700",fontSize:"13px",color:"#1e5f5f",marginBottom:"2px"}}>{item.name}</p>
+                  <p style={{fontSize:"11px",color:"#7ab8b8"}}>{item.cat} · مقاس {item.size}</p>
+                  <p style={{fontSize:"14px",fontWeight:"800",color:"#3aadad",marginTop:"3px"}}>{fmt(item.price)}</p>
+                  <div style={{display:"flex",alignItems:"center",gap:"8px",marginTop:"6px"}}>
+                    <button className="qbh" onClick={()=>updQty(item.key,-1)} style={{...S.qb,width:"30px",height:"30px",fontSize:"16px"}}>−</button>
+                    <span style={{fontWeight:"700",minWidth:"22px",textAlign:"center"}}>{item.qty}</span>
+                    <button className="qbh" onClick={()=>updQty(item.key,1)} style={{...S.qb,width:"30px",height:"30px",fontSize:"16px"}}>+</button>
+                    <span style={{marginRight:"auto",fontSize:"12px",color:"#3aadad",fontWeight:"700"}}>{fmt(item.price*item.qty)}</span>
+                  </div>
+                </div>
+                <button onClick={()=>remCart(item.key)} style={{background:"none",border:"none",color:"#88cccc",cursor:"pointer",fontSize:"20px",alignSelf:"flex-start",padding:"2px"}}>✕</button>
+              </div>
+            ))}
+          </div>
+
+          {/* Coupon */}
+          <div style={{background:"#fff",borderRadius:"14px",padding:"14px",marginTop:"14px",border:"1px solid #cce8e8"}}>
+            <p style={{fontSize:"13px",fontWeight:"700",color:"#1e5f5f",marginBottom:"10px"}}>🏷 كوبون الخصم</p>
+            {appliedCoupon?(
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",background:"#edf7ed",borderRadius:"10px",padding:"10px 14px"}}>
+                <span style={{fontSize:"13px",fontWeight:"700",color:"#2e7d2e"}}>✓ {appliedCoupon.code} — خصم {appliedCoupon.discount}{appliedCoupon.type==="percent"?"%":" د.ل"}</span>
+                <button onClick={()=>setAppliedCoupon(null)} style={{background:"none",border:"none",color:"#999",cursor:"pointer",fontSize:"16px"}}>✕</button>
+              </div>
+            ):(
+              <div style={{display:"flex",gap:"8px"}}>
+                <input value={couponInput} onChange={e=>setCouponInput(e.target.value.toUpperCase())} onKeyDown={e=>e.key==="Enter"&&applyCoupon(couponInput)} placeholder="أدخلي كود الكوبون" style={{...S.field,flex:1,padding:"10px 12px"}}/>
+                <button className="gh" onClick={()=>applyCoupon(couponInput)} style={{padding:"10px 16px",background:"#3aadad",color:"#fff",border:"none",borderRadius:"10px",cursor:"pointer",fontWeight:"700",fontSize:"13px",flexShrink:0,transition:"background .15s"}}>تطبيق</button>
+              </div>
+            )}
+          </div>
+
+          {/* Summary */}
+          <div style={{background:"#fff",borderRadius:"14px",padding:"16px",marginTop:"12px",border:"1px solid #cce8e8"}}>
+            <div style={{display:"flex",justifyContent:"space-between",marginBottom:"8px",fontSize:"14px",color:"#2a5f5f"}}><span>المجموع الفرعي</span><span>{fmt(subtotal)}</span></div>
+            <div style={{display:"flex",justifyContent:"space-between",marginBottom:"8px",fontSize:"14px",color:"#2a5f5f"}}><span>الشحن</span><span style={{color:ship===0?"#2e7d2e":"inherit"}}>{ship===0?"مجاني":fmt(ship)}</span></div>
+            {appliedCoupon&&<div style={{display:"flex",justifyContent:"space-between",marginBottom:"8px",fontSize:"14px",color:"#2e7d2e"}}><span>خصم الكوبون</span><span>- {fmt(couponDiscount)}</span></div>}
+            <div style={{borderTop:"1px dashed #cce8e8",paddingTop:"10px",display:"flex",justifyContent:"space-between",fontWeight:"800",fontSize:"17px",color:"#1e5f5f"}}><span>الإجمالي</span><span style={{color:"#3aadad"}}>{fmt(total)}</span></div>
+          </div>
+
+          {/* WhatsApp Order Button */}
+          <button className="gh" onClick={()=>setShowForm(true)} style={{width:"100%",marginTop:"14px",padding:"16px",background:"#25D366",color:"#fff",border:"none",borderRadius:"14px",cursor:"pointer",fontSize:"15px",fontWeight:"800",transition:"background .15s",display:"flex",alignItems:"center",justifyContent:"center",gap:"10px"}}>
+            <span style={{fontSize:"22px"}}>💬</span> أرسل طلبك عبر واتساب
+          </button>
+
+          {/* Order Form Modal */}
+          {showForm&&(
+            <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.6)",zIndex:999,display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(4px)"}} onClick={e=>e.target===e.currentTarget&&setShowForm(false)}>
+              <div style={{background:"#fff",borderRadius:"20px 20px 0 0",width:"100%",maxWidth:"480px",padding:"24px 20px 40px",animation:"fadeUp .3s ease"}}>
+                <div style={{width:"40px",height:"4px",background:"#b8e0e0",borderRadius:"4px",margin:"0 auto 20px"}}/>
+                <h3 style={{fontSize:"18px",fontWeight:"800",color:"#1e5f5f",marginBottom:"6px"}}>بيانات الطلب</h3>
+                <p style={{fontSize:"13px",color:"#7ab8b8",marginBottom:"20px"}}>سيُرسل طلبك مباشرة على واتساب المتجر</p>
+
+                <div style={{display:"flex",flexDirection:"column",gap:"13px"}}>
+                  <div>
+                    <label style={S.lbl}>الاسم الكامل *</label>
+                    <input value={name} onChange={e=>{setName(e.target.value);setErr("");}} placeholder="مثال: فاطمة محمد" style={{...S.field,width:"100%"}}/>
+                  </div>
+                  <div>
+                    <label style={S.lbl}>رقم الهاتف (واتساب) *</label>
+                    <input type="tel" value={phone} onChange={e=>{setPhone(e.target.value);setErr("");}} placeholder="0910000000" style={{...S.field,width:"100%"}}/>
+                  </div>
+                  <div>
+                    <label style={S.lbl}>ملاحظات (اختياري)</label>
+                    <textarea value={note} onChange={e=>setNote(e.target.value)} placeholder="عنوان التوصيل أو أي ملاحظة..." style={{...S.field,width:"100%",height:"72px",resize:"none"}}/>
+                  </div>
+
+                  {err&&<div style={{background:"#fff5f5",border:"1px solid #fecaca",borderRadius:"10px",padding:"10px 14px",fontSize:"13px",color:"#b91c1c",fontWeight:"600"}}>⚠ {err}</div>}
+
+                  {/* Order summary inside modal */}
+                  <div style={{background:"#f0f8f8",borderRadius:"12px",padding:"12px 14px",fontSize:"13px",color:"#2a5f5f"}}>
+                    <p style={{fontWeight:"700",marginBottom:"8px",color:"#1e5f5f"}}>ملخص طلبك:</p>
+                    {cart.map(i=>(<div key={i.key} style={{display:"flex",justifyContent:"space-between",marginBottom:"4px"}}><span>{i.name} × {i.qty}</span><span style={{fontWeight:"700"}}>{fmt(i.price*i.qty)}</span></div>))}
+                    <div style={{borderTop:"1px dashed #b8e0e0",marginTop:"8px",paddingTop:"8px",display:"flex",justifyContent:"space-between",fontWeight:"800",color:"#3aadad"}}><span>الإجمالي</span><span>{fmt(total)}</span></div>
+                  </div>
+
+                  <button onClick={sendOrder} style={{padding:"16px",background:"#25D366",color:"#fff",border:"none",borderRadius:"14px",cursor:"pointer",fontSize:"15px",fontWeight:"800",display:"flex",alignItems:"center",justifyContent:"center",gap:"10px"}}>
+                    <span style={{fontSize:"20px"}}>💬</span> تأكيد وإرسال عبر واتساب
+                  </button>
+                  <button onClick={()=>setShowForm(false)} style={{padding:"12px",background:"#fff",color:"#2a5f5f",border:"1.5px solid #cce8e8",borderRadius:"14px",cursor:"pointer",fontSize:"14px",fontWeight:"600"}}>إلغاء</button>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  CHECKOUT
+// ═══════════════════════════════════════════════════════════════════════════════
+function Checkout({cart,subtotal,ship,total,couponDiscount,appliedCoupon,step,setStep,placeOrder,storeInfo,bankInfo}){
+  const [form,setForm]=useState({name:"",phone:"",city:storeInfo.city,addr:"",pay:"cash"});
+  const upd=(k,v)=>setForm(f=>({...f,[k]:v}));
+  const ok=form.name&&form.phone&&form.city&&form.addr;
+  return(
+    <div style={{padding:"20px 16px",paddingBottom:"80px",animation:"fadeIn .3s ease"}}>
+      <div style={{display:"flex",alignItems:"center",marginBottom:"28px"}}>
+        {["معلومات الشحن","طريقة الدفع"].map((s,i)=>(
+          <div key={i} style={{display:"flex",alignItems:"center",flex:i===0?1:"none"}}>
+            <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"3px"}}>
+              <div style={{width:"28px",height:"28px",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"12px",fontWeight:"700",background:i<step?"#3aadad":i===step?"#1e5f5f":"#cce8e8",color:i<=step?"#fff":"#7ab8b8"}}>{i<step?"✓":i+1}</div>
+              <span style={{fontSize:"9px",whiteSpace:"nowrap",color:i===step?"#1e5f5f":"#7ab8b8",fontWeight:i===step?"700":"400"}}>{s}</span>
+            </div>
+            {i===0&&<div style={{flex:1,height:"2px",background:step>0?"#3aadad":"#cce8e8",margin:"0 6px",marginBottom:"14px"}}/>}
+          </div>
+        ))}
+      </div>
+      {step===0&&(
+        <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
+          <h3 style={{fontSize:"18px",fontWeight:"800",color:"#1e5f5f"}}>بيانات الشحن</h3>
+          {[["name","الاسم الكامل","text"],["phone","رقم الهاتف","tel"],["city","المدينة","text"],["addr","العنوان التفصيلي","text"]].map(([k,l,t])=>(
+            <div key={k}>
+              <label style={S.lbl}>{l}</label>
+              <input type={t} value={form[k]} onChange={e=>upd(k,e.target.value)} placeholder={l} style={{...S.field,width:"100%"}}/>
+            </div>
+          ))}
+          <button className="gh" onClick={()=>ok&&setStep(1)} disabled={!ok} style={{width:"100%",padding:"14px",background:"#3aadad",color:"#fff",border:"none",borderRadius:"14px",cursor:"pointer",fontSize:"15px",fontWeight:"800",transition:"background .15s",opacity:ok?1:.45}}>التالي: طريقة الدفع ←</button>
+        </div>
+      )}
+      {step===1&&(
+        <div>
+          <h3 style={{fontSize:"18px",fontWeight:"800",color:"#1e5f5f",marginBottom:"14px"}}>طريقة الدفع</h3>
+          <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+            {[["cash","💵 الدفع عند الاستلام"],["transfer","🏦 تحويل بنكي"],["wallet","📱 محفظة إلكترونية"]].map(([k,l])=>(
+              <label key={k} style={{display:"flex",alignItems:"center",gap:"14px",padding:"16px",border:"2px solid",borderColor:form.pay===k?"#3aadad":"#cce8e8",borderRadius:"14px",cursor:"pointer",background:form.pay===k?"#e8f8f8":"#fff",transition:"all .15s"}}>
+                <input type="radio" checked={form.pay===k} onChange={()=>upd("pay",k)} style={{accentColor:"#3aadad",flexShrink:0}}/>
+                <span style={{fontWeight:form.pay===k?"700":"400",color:"#1e5f5f"}}>{l}</span>
+              </label>
+            ))}
+          </div>
+          {form.pay==="transfer"&&(
+            <div style={{background:"#f0f8f8",border:"1px solid #cce8e8",borderRadius:"12px",padding:"14px",marginTop:"12px",fontSize:"13px",color:"#2a5f5f",lineHeight:"1.9"}}>
+              <p style={{fontWeight:"700",marginBottom:"8px",color:"#1e5f5f"}}>🏦 بيانات التحويل البنكي:</p>
+              {bankInfo&&bankInfo.bankName?<>
+                {bankInfo.bankName&&<p>🏛 المصرف: <strong>{bankInfo.bankName}</strong></p>}
+                {bankInfo.accountHolder&&<p>👤 اسم الحساب: <strong>{bankInfo.accountHolder}</strong></p>}
+                {bankInfo.accountNum&&<p>🔢 رقم الحساب: <strong>{bankInfo.accountNum}</strong></p>}
+                {bankInfo.iban&&<p>🌐 IBAN: <strong style={{letterSpacing:"1px",fontSize:"12px"}}>{bankInfo.iban}</strong></p>}
+              </>:<p style={{color:"#7ab8b8"}}>سيتم تزويدك بالتفاصيل عبر واتساب</p>}
+            </div>
+          )}
+          <div style={{background:"#fff",border:"1px solid #cce8e8",borderRadius:"14px",padding:"16px",marginTop:"16px"}}>
+            <p style={{fontWeight:"700",marginBottom:"10px",color:"#1e5f5f"}}>ملخص الطلب</p>
+            {cart.map(i=>(<div key={i.key} style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#2a5f5f",marginBottom:"5px"}}><span>{i.name} × {i.qty}</span><span>{fmt(i.price*i.qty)}</span></div>))}
+            <div style={{borderTop:"1px dashed #cce8e8",paddingTop:"8px",marginTop:"6px"}}>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#2a5f5f",marginBottom:"4px"}}><span>الشحن</span><span>{ship===0?"مجاني":fmt(ship)}</span></div>
+              {appliedCoupon&&<div style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#2e7d2e",marginBottom:"4px"}}><span>خصم الكوبون</span><span>- {fmt(couponDiscount)}</span></div>}
+              <div style={{display:"flex",justifyContent:"space-between",fontWeight:"800",color:"#3aadad",fontSize:"16px",marginTop:"6px"}}><span>الإجمالي</span><span>{fmt(total)}</span></div>
+            </div>
+          </div>
+          <button className="gh" onClick={()=>placeOrder(form)} style={{width:"100%",marginTop:"14px",padding:"14px",background:"#3aadad",color:"#fff",border:"none",borderRadius:"14px",cursor:"pointer",fontSize:"15px",fontWeight:"800",transition:"background .15s"}}>🔒 تأكيد الطلب</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  DONE
+// ═══════════════════════════════════════════════════════════════════════════════
+function Done({order,setScreen,setNavTab}){
+  if(!order)return null;
+  const steps=[{icon:"✅",label:"تم تأكيد طلبك",time:"الآن",done:true},{icon:"📦",label:"جاري تجهيز الطلب",time:"خلال ٣٠ دقيقة",done:true},{icon:"🚚",label:"في الطريق إليك",time:"٢-٤ أيام عمل",done:false},{icon:"🏠",label:"تم التسليم",time:"قريباً",done:false}];
+  return(
+    <div style={{padding:"32px 20px 40px",textAlign:"center",animation:"fadeUp .4s ease"}}>
+      <div style={{fontSize:"72px",marginBottom:"8px"}}>🎉</div>
+      <h2 style={{fontSize:"26px",fontWeight:"900",color:"#1e5f5f",marginBottom:"6px"}}>تم الطلب بنجاح!</h2>
+      <p style={{color:"#7ab8b8",fontSize:"14px",marginBottom:"6px"}}>شكراً لتسوقك مع <strong style={{color:"#3aadad"}}>CYRINE</strong></p>
+      <div style={{background:"linear-gradient(135deg,#3aadad,#6ecece)",color:"#fff",borderRadius:"12px",padding:"10px 20px",display:"inline-block",margin:"12px 0",fontSize:"15px",fontWeight:"700",letterSpacing:"1px"}}>رقم الطلب: {order.id}</div>
+      <div style={{background:"#fff",border:"1px solid #cce8e8",borderRadius:"18px",padding:"24px",textAlign:"right",marginTop:"12px"}}>
+        <p style={{fontWeight:"800",color:"#1e5f5f",marginBottom:"20px",fontSize:"15px"}}>تتبع طلبك</p>
+        {steps.map((s,i)=>(
+          <div key={i} style={{display:"flex",gap:"16px",marginBottom:i<steps.length-1?"22px":"0",position:"relative"}}>
+            {i<steps.length-1&&<div style={{position:"absolute",right:"15px",top:"34px",width:"2px",height:"calc(100% + 2px)",background:s.done?"#3aadad":"#cce8e8"}}/>}
+            <div style={{width:"32px",height:"32px",borderRadius:"50%",flexShrink:0,fontSize:"15px",display:"flex",alignItems:"center",justifyContent:"center",background:s.done?"#3aadad":"#e8f5f5",boxShadow:s.done?"0 0 0 4px rgba(160,120,80,.15)":"none"}}>
+              {s.done?s.icon:<span style={{opacity:.35}}>{s.icon}</span>}
+            </div>
+            <div style={{paddingTop:"4px"}}><p style={{fontWeight:s.done?"700":"400",color:s.done?"#1e5f5f":"#7ab8b8",fontSize:"14px"}}>{s.label}</p><p style={{fontSize:"11px",color:"#88cccc",marginTop:"2px"}}>{s.time}</p></div>
+          </div>
+        ))}
+      </div>
+      <div style={{display:"flex",gap:"10px",marginTop:"20px"}}>
+        <button className="gh" onClick={()=>{setNavTab("account");setScreen("orders");}} style={{flex:1,padding:"13px",background:"#fff",color:"#1e5f5f",border:"2px solid #1e5f5f",borderRadius:"14px",cursor:"pointer",fontSize:"13px",fontWeight:"800",transition:"all .15s"}}>📋 طلباتي</button>
+        <button className="gh" onClick={()=>{setScreen("home");setNavTab("home");}} style={{flex:1,padding:"13px",background:"#3aadad",color:"#fff",border:"none",borderRadius:"14px",cursor:"pointer",fontSize:"13px",fontWeight:"800",transition:"background .15s"}}>متابعة التسوق</button>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  WISHLIST
+// ═══════════════════════════════════════════════════════════════════════════════
+function WishPage({prods,setSelP,setScreen,togWish}){
+  return(
+    <div style={{padding:"20px 16px",animation:"fadeIn .3s ease"}}>
+      <h2 style={{fontSize:"22px",fontWeight:"800",color:"#1e5f5f",marginBottom:"16px"}}>المفضلة ❤️</h2>
+      {prods.length===0?(
+        <div style={{textAlign:"center",padding:"60px 0"}}>
+          <div style={{fontSize:"60px",marginBottom:"16px"}}>🤍</div>
+          <p style={{color:"#7ab8b8",fontSize:"15px"}}>قائمتك فارغة</p>
+          <p style={{color:"#88cccc",fontSize:"13px",marginTop:"8px"}}>اضغطي على 🤍 في أي منتج لإضافته</p>
+        </div>
+      ):(
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+          {prods.map(p=>(
+            <div key={p.id} className="card" style={{background:"#fff",borderRadius:"18px",overflow:"hidden",boxShadow:"0 2px 12px rgba(30,95,95,.07)",position:"relative",cursor:"pointer"}}>
+              <div onClick={()=>{setSelP(p);setScreen("product");}}>
+                <div style={{paddingTop:"110%",position:"relative",overflow:"hidden",background:"#e8f5f5"}}>
+                  <img src={p.img} alt={p.name} loading="lazy" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+                </div>
+              </div>
+              <button onClick={()=>togWish(p.id)} style={{position:"absolute",top:"8px",left:"8px",background:"rgba(255,255,255,.9)",border:"none",borderRadius:"50%",width:"32px",height:"32px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"14px"}}>❤️</button>
+              <div style={{padding:"10px 12px 4px",cursor:"pointer"}} onClick={()=>{setSelP(p);setScreen("product");}}>
+                <p style={{fontSize:"9px",color:"#7ab8b8",marginBottom:"3px"}}>{p.cat}</p>
+                <p style={{fontSize:"13px",fontWeight:"700",color:"#1e5f5f",marginBottom:"4px"}}>{p.name}</p>
+                <span style={{fontSize:"15px",fontWeight:"800",color:"#3aadad"}}>{fmt(p.price)}</span>
+              </div>
+              <button className="gh" onClick={()=>{setSelP(p);setScreen("product");}} style={{width:"100%",padding:"10px",background:"#1e5f5f",color:"#f0e8d8",border:"none",cursor:"pointer",fontSize:"11px",fontWeight:"700",transition:"background .15s"}}>عرض ←</button>
+            </div>
+          ))}
+        </div>
+      )}
+      <div style={{height:"20px"}}/>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  ACCOUNT
+// ═══════════════════════════════════════════════════════════════════════════════
+function Account({orders,setScreen,storeInfo}){
+  const total=orders.reduce((s,o)=>s+o.total,0);
+  const [showFaq,setShowFaq]=useState(false);
+  const [showAddr,setShowAddr]=useState(false);
+  const faq=ls.get(K_FAQ,DEF_FAQ);
+  const addr=ls.get(K_ADDR,{address:"",mapLink:""});
+  return(
+    <div style={{padding:"20px 16px",animation:"fadeIn .3s ease"}}>
+      <h2 style={{fontSize:"22px",fontWeight:"800",color:"#1e5f5f",marginBottom:"20px"}}>حسابي 👤</h2>
+      <div style={{background:"linear-gradient(135deg,#1e5f5f,#2a8a8a)",borderRadius:"18px",padding:"24px",marginBottom:"20px",color:"#fff"}}>
+        <p style={{fontSize:"11px",color:"#a8e8e8",letterSpacing:"2px",marginBottom:"8px"}}>CYRINE ◆ عميلتنا</p>
+        <p style={{fontSize:"22px",fontWeight:"800",marginBottom:"4px"}}>أهلاً بكِ! 🌸</p>
+        <p style={{fontSize:"13px",color:"#c0f0f0"}}>{orders.length} طلب · إجمالي {fmt(total)}</p>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+        <button onClick={()=>setScreen("orders")} style={S.accBtn} className="ar">
+          <span style={{fontSize:"24px"}}>📋</span>
+          <div style={{flex:1,textAlign:"right"}}><p style={{fontWeight:"700",color:"#1e5f5f",fontSize:"14px"}}>طلباتي</p><p style={{fontSize:"12px",color:"#7ab8b8",marginTop:"2px"}}>{orders.length} طلب</p></div>
+          <span style={{color:"#7ab8b8",fontSize:"18px"}}>←</span>
+        </button>
+        <button onClick={()=>setShowAddr(true)} style={S.accBtn} className="ar">
+          <span style={{fontSize:"24px"}}>🏠</span>
+          <div style={{flex:1,textAlign:"right"}}><p style={{fontWeight:"700",color:"#1e5f5f",fontSize:"14px"}}>عنوان التوصيل</p><p style={{fontSize:"12px",color:"#7ab8b8",marginTop:"2px"}}>{addr.address||"أضيفي عنوانك المفضل"}</p></div>
+          <span style={{color:"#7ab8b8",fontSize:"18px"}}>←</span>
+        </button>
+        <button onClick={()=>window.open(`https://wa.me/${storeInfo.whatsapp||"218928249630"}`,"_blank")} style={S.accBtn} className="ar">
+          <span style={{fontSize:"24px"}}>💬</span>
+          <div style={{flex:1,textAlign:"right"}}><p style={{fontWeight:"700",color:"#1e5f5f",fontSize:"14px"}}>تواصلي معنا</p><p style={{fontSize:"12px",color:"#7ab8b8",marginTop:"2px"}}>واتساب · {storeInfo.phone||"00218928249630"}</p></div>
+          <span style={{color:"#7ab8b8",fontSize:"18px"}}>←</span>
+        </button>
+        <button onClick={()=>setShowFaq(true)} style={S.accBtn} className="ar">
+          <span style={{fontSize:"24px"}}>❓</span>
+          <div style={{flex:1,textAlign:"right"}}><p style={{fontWeight:"700",color:"#1e5f5f",fontSize:"14px"}}>الأسئلة الشائعة</p><p style={{fontSize:"12px",color:"#7ab8b8",marginTop:"2px"}}>إجابات على أكثر الأسئلة شيوعاً</p></div>
+          <span style={{color:"#7ab8b8",fontSize:"18px"}}>←</span>
+        </button>
+      </div>
+
+      {showFaq&&(
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.6)",zIndex:999,display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(4px)"}} onClick={e=>e.target===e.currentTarget&&setShowFaq(false)}>
+          <div style={{background:"#fff",borderRadius:"20px 20px 0 0",width:"100%",maxWidth:"480px",padding:"24px 20px 40px",maxHeight:"80vh",overflowY:"auto",animation:"fadeUp .3s ease"}}>
+            <div style={{width:"40px",height:"4px",background:"#cce8e8",borderRadius:"4px",margin:"0 auto 20px"}}/>
+            <h3 style={{fontSize:"18px",fontWeight:"800",color:"#1e5f5f",marginBottom:"16px"}}>❓ الأسئلة الشائعة</h3>
+            {faq.map((item,i)=>(
+              <div key={i} style={{background:"#f0f8f8",borderRadius:"12px",padding:"14px",marginBottom:"10px"}}>
+                <p style={{fontWeight:"700",color:"#1e5f5f",fontSize:"14px",marginBottom:"6px"}}>س: {item.q}</p>
+                <p style={{fontSize:"13px",color:"#2a5f5f",lineHeight:"1.7"}}>ج: {item.a}</p>
+              </div>
+            ))}
+            <button onClick={()=>setShowFaq(false)} style={{width:"100%",marginTop:"8px",padding:"13px",background:"#1e5f5f",color:"#fff",border:"none",borderRadius:"14px",cursor:"pointer",fontSize:"14px",fontWeight:"700"}}>إغلاق</button>
+          </div>
+        </div>
+      )}
+
+      {showAddr&&(
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.6)",zIndex:999,display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(4px)"}} onClick={e=>e.target===e.currentTarget&&setShowAddr(false)}>
+          <div style={{background:"#fff",borderRadius:"20px 20px 0 0",width:"100%",maxWidth:"480px",padding:"24px 20px 40px",animation:"fadeUp .3s ease"}}>
+            <div style={{width:"40px",height:"4px",background:"#cce8e8",borderRadius:"4px",margin:"0 auto 20px"}}/>
+            <h3 style={{fontSize:"18px",fontWeight:"800",color:"#1e5f5f",marginBottom:"16px"}}>🏠 عنوان التوصيل</h3>
+            <label style={S.lbl}>العنوان التفصيلي</label>
+            <textarea defaultValue={addr.address} id="addrTxt" placeholder="المدينة، الحي، الشارع، رقم المنزل..." style={{...S.field,width:"100%",height:"80px",resize:"none",marginBottom:"12px"}}/>
+            <label style={S.lbl}>رابط Google Maps (اختياري)</label>
+            <input defaultValue={addr.mapLink} id="mapTxt" placeholder="https://maps.google.com/..." style={{...S.field,width:"100%",marginBottom:"16px"}}/>
+            <div style={{display:"flex",gap:"10px"}}>
+              <button onClick={()=>setShowAddr(false)} style={{flex:1,padding:"13px",background:"#f0f8f8",color:"#1e5f5f",border:"1.5px solid #cce8e8",borderRadius:"14px",cursor:"pointer",fontWeight:"600"}}>إلغاء</button>
+              <button onClick={()=>{ls.set(K_ADDR,{address:document.getElementById("addrTxt").value,mapLink:document.getElementById("mapTxt").value});setShowAddr(false);}} style={{flex:2,padding:"13px",background:"#1e5f5f",color:"#fff",border:"none",borderRadius:"14px",cursor:"pointer",fontWeight:"700",fontSize:"14px"}}>💾 حفظ العنوان</button>
+            </div>
+          </div>
+        </div>
+      )}
+      <div style={{height:"20px"}}/>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  ORDERS PAGE (Customer)
+// ═══════════════════════════════════════════════════════════════════════════════
+function OrdersPage({orders,setOrders,showToast}){
+  const [sel,setSel]=useState(null);
+  if(sel){
+    const o=orders.find(x=>x.id===sel);
+    if(!o)return null;
+    return(
+      <div style={{padding:"20px 16px",animation:"fadeIn .3s ease",paddingBottom:"40px"}}>
+        <h3 style={{fontSize:"18px",fontWeight:"800",color:"#1e5f5f",marginBottom:"4px"}}>تفاصيل الطلب</h3>
+        <p style={{fontSize:"13px",color:"#7ab8b8",marginBottom:"16px"}}>{o.id} · {o.date} {o.time}</p>
+        <div style={{background:"#fff",borderRadius:"14px",padding:"16px",border:"1px solid #cce8e8",marginBottom:"12px"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"12px"}}>
+            <span style={{fontWeight:"700",color:"#1e5f5f"}}>الحالة</span>
+            <span style={{background:STATUS_COLOR[o.status]||"#666",color:"#fff",borderRadius:"20px",padding:"4px 12px",fontSize:"12px",fontWeight:"700"}}>{o.status}</span>
+          </div>
+          {o.items.map(i=>(<div key={i.key} style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#2a5f5f",marginBottom:"6px",paddingBottom:"6px",borderBottom:"1px solid #e8f5f5"}}><span>{i.name} × {i.qty}</span><span style={{fontWeight:"700"}}>{fmt(i.price*i.qty)}</span></div>))}
+          <div style={{marginTop:"8px"}}>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#2a5f5f",marginBottom:"4px"}}><span>الشحن</span><span>{o.ship===0?"مجاني":fmt(o.ship)}</span></div>
+            {o.couponDiscount>0&&<div style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#2e7d2e",marginBottom:"4px"}}><span>الخصم</span><span>- {fmt(o.couponDiscount)}</span></div>}
+            <div style={{display:"flex",justifyContent:"space-between",fontWeight:"800",fontSize:"16px",color:"#3aadad",marginTop:"8px",paddingTop:"8px",borderTop:"1px dashed #cce8e8"}}><span>الإجمالي</span><span>{fmt(o.total)}</span></div>
+          </div>
+        </div>
+        <div style={{background:"#fff",borderRadius:"14px",padding:"16px",border:"1px solid #cce8e8",marginBottom:"14px"}}>
+          <p style={{fontWeight:"700",color:"#1e5f5f",marginBottom:"10px"}}>بيانات التوصيل</p>
+          {[["الاسم",o.customer.name],["الهاتف",o.customer.phone],["المدينة",o.customer.city],["العنوان",o.customer.addr],["الدفع",o.customer.pay==="cash"?"عند الاستلام":o.customer.pay==="transfer"?"تحويل":"محفظة"]].map(([l,v])=>(<div key={l} style={{display:"flex",justifyContent:"space-between",fontSize:"13px",color:"#2a5f5f",marginBottom:"5px"}}><span style={{color:"#7ab8b8"}}>{l}</span><span style={{fontWeight:"600"}}>{v}</span></div>))}
+        </div>
+        {o.status!=="تم التسليم"&&o.status!=="ملغي"&&(
+          <button onClick={()=>{setOrders(p=>p.map(x=>x.id===o.id?{...x,status:"ملغي"}:x));showToast("تم إلغاء الطلب","warn");setSel(null);}} style={{width:"100%",padding:"13px",background:"#fff",color:"#b91c1c",border:"2px solid #fecaca",borderRadius:"14px",cursor:"pointer",fontSize:"14px",fontWeight:"700"}}>❌ إلغاء الطلب</button>
+        )}
+        <button onClick={()=>setSel(null)} style={{width:"100%",marginTop:"10px",padding:"13px",background:"#f0f8f8",color:"#2a5f5f",border:"1px solid #cce8e8",borderRadius:"14px",cursor:"pointer",fontSize:"14px",fontWeight:"600"}}>← رجوع</button>
+      </div>
+    );
+  }
+  return(
+    <div style={{padding:"20px 16px",animation:"fadeIn .3s ease",paddingBottom:"40px"}}>
+      <h2 style={{fontSize:"22px",fontWeight:"800",color:"#1e5f5f",marginBottom:"16px"}}>طلباتي 📋</h2>
+      {orders.length===0?(
+        <div style={{textAlign:"center",padding:"60px 0"}}>
+          <div style={{fontSize:"60px",marginBottom:"16px"}}>📋</div>
+          <p style={{color:"#7ab8b8"}}>لا توجد طلبات بعد</p>
+        </div>
+      ):(
+        <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+          {orders.map(o=>(
+            <button key={o.id} onClick={()=>setSel(o.id)} className="ar" style={{display:"flex",gap:"12px",alignItems:"center",background:"#fff",borderRadius:"14px",padding:"14px",border:"1px solid #cce8e8",cursor:"pointer",textAlign:"right",width:"100%",transition:"background .15s"}}>
+              <div style={{width:"44px",height:"44px",borderRadius:"12px",background:"#e8f5f5",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"20px",flexShrink:0}}>🛍</div>
+              <div style={{flex:1}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  <p style={{fontWeight:"700",color:"#1e5f5f",fontSize:"13px"}}>{o.id}</p>
+                  <span style={{background:STATUS_COLOR[o.status]||"#666",color:"#fff",borderRadius:"20px",padding:"2px 8px",fontSize:"10px",fontWeight:"700"}}>{o.status}</span>
+                </div>
+                <p style={{fontSize:"11px",color:"#7ab8b8",marginTop:"2px"}}>{o.date} · {o.items.length} منتج</p>
+                <p style={{fontSize:"13px",fontWeight:"800",color:"#3aadad",marginTop:"3px"}}>{fmt(o.total)}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  ADMIN PANEL
+// ═══════════════════════════════════════════════════════════════════════════════
+function AdminPanel({prods,setProds,orders,setOrders,hero,setHero,storeInfo,setStoreInfo,coupons,setCoupons,adminPass,setAdminPass,bankInfo,setBankInfo,faqList,setFaqList,storeAddr,setStoreAddr,syncToCloud,lastSync,syncing,onClose,toast,authed,setAuthed,DEF_PRODS}){
+  const [inp,setInp]=useState("");const [perr,setPerr]=useState(false);
+  const [tab,setTab]=useState("prods");
+  const [editId,setEditId]=useState(null);const [del,setDel]=useState(null);const [sq,setSq]=useState("");
+  const blank={name:"",cat:"نساء",sub:"",price:"",old:"",sizes:"S,M,L,XL",colors:"#1a1a2e,#3aadad",img:"",desc:"",badge:"بدون",rating:"4.5",reviews:"0"};
+  const [form,setForm]=useState(blank);
+  const upd=(k,v)=>setForm(f=>({...f,[k]:v}));
+  const [hf,setHf]=useState(hero);
+  const [sf,setSf]=useState(storeInfo);
+  const [pw,setPw]=useState({cur:"",n1:"",n2:""});
+  const [cpForm,setCpForm]=useState({code:"",discount:"",type:"percent",active:true});
+  const [oFilter,setOFilter]=useState("الكل");
+  // bank form
+  const [bf,setBf]=useState(bankInfo||DEF_BANK);
+  // faq edit
+  const [faqEdit,setFaqEdit]=useState(faqList||DEF_FAQ);
+  const [newFaq,setNewFaq]=useState({q:"",a:""});
+
+  if(!authed)return(
+    <div style={S.overlay}>
+      <div style={{background:"#fff",borderRadius:"20px",width:"90%",maxWidth:"320px",padding:"32px 24px",textAlign:"center",boxShadow:"0 24px 80px rgba(0,0,0,.3)"}}>
+        <div style={{fontSize:"44px",marginBottom:"12px"}}>🔐</div>
+        <h3 style={{fontSize:"18px",fontWeight:"800",color:"#1e5f5f",marginBottom:"6px"}}>لوحة التحكم</h3>
+        <p style={{fontSize:"13px",color:"#7ab8b8",marginBottom:"18px"}}>كلمة المرور مطلوبة للدخول</p>
+        <input type="password" value={inp} onChange={e=>{setInp(e.target.value);setPerr(false);}} onKeyDown={e=>e.key==="Enter"&&(inp===adminPass?setAuthed(true):setPerr(true))} placeholder="كلمة المرور" style={{...S.field,textAlign:"center",marginBottom:"10px"}}/>
+        {perr&&<p style={{color:"#c0392b",fontSize:"12px",marginBottom:"10px"}}>❌ كلمة المرور خاطئة</p>}
+        <div style={{display:"flex",gap:"10px",marginTop:"8px"}}>
+          <button onClick={onClose} style={{flex:1,padding:"12px",background:"#fff",border:"1.5px solid #cce8e8",borderRadius:"12px",cursor:"pointer",fontWeight:"600",color:"#2a5f5f"}}>إلغاء</button>
+          <button className="gh" onClick={()=>inp===adminPass?setAuthed(true):setPerr(true)} style={{flex:1,padding:"12px",background:"#3aadad",color:"#fff",border:"none",borderRadius:"12px",cursor:"pointer",fontWeight:"700",transition:"background .15s"}}>دخول ←</button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // helpers
+  function parseForm(){return{id:editId||Date.now(),name:form.name.trim(),cat:form.cat,sub:form.sub.trim(),price:Number(form.price),old:form.old?Number(form.old):null,sizes:form.sizes.split(",").map(s=>s.trim()).filter(Boolean),colors:form.colors.split(",").map(c=>c.trim()).filter(Boolean),img:form.img.trim(),desc:form.desc.trim()||null,badge:form.badge==="بدون"?null:form.badge,r:Number(form.rating),rv:Number(form.reviews),active:true};}
+  function validate(){if(!form.name.trim())return"اسم المنتج مطلوب";if(!form.sub.trim())return"التصنيف الفرعي مطلوب";if(!form.price||isNaN(Number(form.price)))return"السعر يجب أن يكون رقماً";if(!form.img||form.img.trim()==="")return"صورة المنتج مطلوبة — ارفعي صورة أو الصقي رابطاً";if(!form.sizes.trim())return"أدخلي مقاساً على الأقل";return null;}
+  function saveProd(){const err=validate();if(err){toast("⚠ "+err,"warn");return;}const p=parseForm();let newProds;if(editId){newProds=prods.map(x=>x.id===editId?p:x);setProds(newProds);toast("✓ تم تحديث المنتج");}else{newProds=[p,...prods];setProds(newProds);toast("✓ تم إضافة المنتج");}syncToCloud({products:newProds});setForm(blank);setEditId(null);setTab("prods");}
+  function startEdit(p){setForm({name:p.name,cat:p.cat,sub:p.sub,price:String(p.price),old:p.old?String(p.old):"",sizes:p.sizes.join(","),colors:p.colors.join(","),img:p.img,desc:p.desc||"",badge:p.badge||"بدون",rating:String(p.r),reviews:String(p.rv)});setEditId(p.id);setTab("editprod");}
+  function doDelete(id){setProds(p=>p.filter(x=>x.id!==id));setDel(null);toast("🗑 تم الحذف","warn");}
+  function toggleActive(id){const r=prods.map(x=>x.id===id?{...x,active:!x.active}:x);setProds(r);syncToCloud({products:r});}
+
+  function saveHero(){setHero(hf);syncToCloud({hero:hf});toast("✓ تم حفظ الواجهة");}
+  function saveStore(){setStoreInfo(sf);syncToCloud({storeInfo:sf});toast("✓ تم حفظ بيانات المتجر");}
+  function changePass(){
+    if(pw.cur!==adminPass){toast("❌ كلمة المرور الحالية خاطئة","err");return;}
+    if(pw.n1.length<6){toast("⚠ كلمة المرور الجديدة 6 أحرف على الأقل","warn");return;}
+    if(pw.n1!==pw.n2){toast("⚠ كلمتا المرور غير متطابقتين","warn");return;}
+    setAdminPass(pw.n1);setPw({cur:"",n1:"",n2:""});toast("✓ تم تغيير كلمة المرور");
+  }
+  function addCoupon(){
+    if(!cpForm.code||!cpForm.discount){toast("⚠ أدخل الكود والخصم","warn");return;}
+    const r=[...coupons,{...cpForm,code:cpForm.code.toUpperCase(),discount:Number(cpForm.discount)}];
+    setCoupons(r);syncToCloud({coupons:r});
+    setCpForm({code:"",discount:"",type:"percent",active:true});toast("✓ تم إضافة الكوبون");
+  }
+  function updateOrderStatus(id,status){setOrders(p=>p.map(o=>o.id===id?{...o,status}:o));toast("✓ تم تحديث حالة الطلب");}
+
+  const list=prods.filter(p=>!sq||p.name.includes(sq)||p.cat.includes(sq));
+  const filteredOrders=oFilter==="الكل"?orders:orders.filter(o=>o.status===oFilter);
+  const revenue=orders.filter(o=>o.status!=="ملغي").reduce((s,o)=>s+o.total,0);
+
+  const TABS=[["prods","📦 المنتجات"],["orders","🧾 الطلبات"],["hero","🖼 الواجهة"],["store","🏪 المتجر"],["bank","🏦 البنك"],["coupons","🏷 الكوبونات"],["faq","❓ الأسئلة"],["settings","⚙️ الإعدادات"]];
+
+  return(
+    <div style={S.overlay}>
+      <div style={{background:"#fff",borderRadius:"20px",width:"98%",maxWidth:"520px",maxHeight:"94vh",display:"flex",flexDirection:"column",overflow:"hidden",boxShadow:"0 24px 80px rgba(0,0,0,.3)"}}>
+
+        {/* Header */}
+        <div style={{background:"#1e5f5f",padding:"14px 18px",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0}}>
+          <div><p style={{color:"#3aadad",fontSize:"10px",letterSpacing:"2px",marginBottom:"2px"}}>CYRINE ◆ لوحة التحكم</p><h2 style={{color:"#f0f8f8",fontSize:"16px",fontWeight:"800"}}>مرحباً بالمسؤول 👋</h2>{lastSync&&<p style={{color:"#7ab8b8",fontSize:"9px",marginTop:"2px"}}>آخر مزامنة: {lastSync}</p>}</div>
+          <div style={{display:"flex",gap:"8px",alignItems:"center"}}>
+            <span style={{background:"#3aadad",color:"#fff",borderRadius:"20px",padding:"3px 10px",fontSize:"11px",fontWeight:"700"}}>{prods.length} منتج</span>
+            <span style={{background:"#c0392b",color:"#fff",borderRadius:"20px",padding:"3px 10px",fontSize:"11px",fontWeight:"700"}}>{orders.length} طلب</span>
+            <button onClick={()=>syncToCloud()} style={{background:"rgba(255,255,255,.15)",border:"none",color:"#f0f8f8",borderRadius:"8px",padding:"5px 10px",cursor:"pointer",fontSize:"11px",fontWeight:"700",display:"flex",alignItems:"center",gap:"4px"}}>
+              {syncing?<span style={{fontSize:"14px"}}>⏳</span>:<span style={{fontSize:"14px"}}>☁️</span>}
+              {syncing?"جاري...":"نشر"}
+            </button>
+            <button onClick={onClose} style={{background:"rgba(255,255,255,.12)",border:"none",color:"#f0f8f8",borderRadius:"8px",width:"30px",height:"30px",cursor:"pointer",fontSize:"16px",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
+          </div>
+        </div>
+
+        {/* Tabs scroll */}
+        <div style={{display:"flex",overflowX:"auto",borderBottom:"2px solid #cce8e8",background:"#fff",flexShrink:0,scrollbarWidth:"none"}}>
+          {TABS.map(([k,v])=>(
+            <button key={k} onClick={()=>setTab(k)} style={{flexShrink:0,padding:"11px 14px",background:"none",border:"none",cursor:"pointer",fontSize:"11px",fontWeight:tab===k?"800":"500",color:tab===k?"#3aadad":"#7ab8b8",borderBottom:tab===k?"3px solid #3aadad":"3px solid transparent",transition:"all .15s",whiteSpace:"nowrap"}}>{v}</button>
+          ))}
+        </div>
+
+        {/* Body */}
+        <div style={{overflowY:"auto",flex:1,padding:"16px"}}>
+
+          {/* ── PRODUCTS ── */}
+          {(tab==="prods"||tab==="editprod")&&(
+            <div>
+              {tab==="prods"&&(
+                <>
+                  <div style={{display:"flex",gap:"8px",marginBottom:"12px"}}>
+                    <div style={{flex:1,display:"flex",alignItems:"center",gap:"8px",background:"#f0f8f8",border:"1.5px solid #cce8e8",borderRadius:"10px",padding:"0 12px",height:"40px"}}>
+                      <span style={{color:"#7ab8b8"}}>🔍</span>
+                      <input value={sq} onChange={e=>setSq(e.target.value)} placeholder="ابحثي..." style={{flex:1,border:"none",background:"none",fontSize:"13px",outline:"none"}}/>
+                      {sq&&<button onClick={()=>setSq("")} style={{background:"none",border:"none",color:"#7ab8b8",cursor:"pointer"}}>✕</button>}
+                    </div>
+                    <button className="gh" onClick={()=>{setEditId(null);setForm(blank);setTab("editprod");}} style={{padding:"0 14px",background:"#3aadad",color:"#fff",border:"none",borderRadius:"10px",fontSize:"13px",fontWeight:"700",cursor:"pointer",whiteSpace:"nowrap",transition:"background .15s"}}>+ إضافة</button>
+                  </div>
+                  <div style={{display:"flex",justifyContent:"flex-end",marginBottom:"10px"}}>
+                    <button onClick={()=>setDel("reset")} style={{background:"none",border:"1px solid #cce8e8",borderRadius:"8px",padding:"5px 12px",fontSize:"11px",color:"#7ab8b8",cursor:"pointer"}}>↺ إعادة التعيين</button>
+                  </div>
+                  <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
+                    {list.map(p=>(
+                      <div key={p.id} className="ar" style={{display:"flex",gap:"10px",alignItems:"center",background:"#faf8f5",borderRadius:"12px",padding:"10px",border:"1px solid #cce8e8",transition:"background .15s",opacity:p.active===false?.5:1}}>
+                        <img src={p.img} alt={p.name} style={{width:"48px",height:"48px",borderRadius:"8px",objectFit:"cover",flexShrink:0,border:"1px solid #cce8e8"}} onError={e=>e.target.style.opacity=0}/>
+                        <div style={{flex:1,minWidth:0}}>
+                          <p style={{fontWeight:"700",fontSize:"12px",color:"#1e5f5f",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{p.name}</p>
+                          <p style={{fontSize:"10px",color:"#7ab8b8",marginTop:"1px"}}>{p.cat} · {p.sub}</p>
+                          <div style={{display:"flex",gap:"6px",marginTop:"3px",alignItems:"center"}}>
+                            <span style={{fontSize:"12px",fontWeight:"800",color:"#3aadad"}}>{fmt(p.price)}</span>
+                            {p.badge&&<span style={{fontSize:"8px",background:"#1e5f5f",color:"#f0e8d8",borderRadius:"4px",padding:"1px 5px"}}>{p.badge}</span>}
+                          </div>
+                        </div>
+                        <div style={{display:"flex",gap:"4px",flexShrink:0}}>
+                          <button onClick={()=>toggleActive(p.id)} style={{background:p.active===false?"#f0fdf4":"#fff5f5",border:"1px solid",borderColor:p.active===false?"#bbf7d0":"#fecaca",borderRadius:"6px",padding:"4px 7px",fontSize:"10px",fontWeight:"700",color:p.active===false?"#166534":"#991b1b",cursor:"pointer"}}>{p.active===false?"تفعيل":"إخفاء"}</button>
+                          <button className="ebh" onClick={()=>startEdit(p)} style={{background:"#e8f8f8",border:"1px solid #e0d0b0",borderRadius:"6px",padding:"4px 7px",fontSize:"10px",fontWeight:"700",color:"#92600a",cursor:"pointer",transition:"all .15s"}}>✏️</button>
+                          <button className="dbh" onClick={()=>setDel(p.id)} style={{background:"#fff5f5",border:"1px solid #fecaca",borderRadius:"6px",padding:"4px 7px",fontSize:"10px",fontWeight:"700",color:"#991b1b",cursor:"pointer",transition:"all .15s"}}>🗑</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+              {tab==="editprod"&&(
+                <div style={{display:"flex",flexDirection:"column",gap:"13px"}}>
+                  <button onClick={()=>{setTab("prods");setEditId(null);setForm(blank);}} style={{display:"flex",alignItems:"center",gap:"8px",background:"#f0f8f8",border:"1px solid #cce8e8",borderRadius:"10px",padding:"10px 14px",cursor:"pointer",fontSize:"13px",fontWeight:"700",color:"#1e5f5f",width:"fit-content"}}>← رجوع للمنتجات</button>
+                  <div style={{background:editId?"#e8f8f8":"#f0fdf4",border:"1px solid",borderColor:editId?"#b0d8d8":"#bbf7d0",borderRadius:"10px",padding:"10px 14px",fontSize:"12px",color:editId?"#1e5f5f":"#166534",fontWeight:"600"}}>{editId?"✏️ وضع التعديل":"➕ إضافة منتج جديد"}</div>
+                  <div><label style={S.lbl}>اسم المنتج *</label><input value={form.name} onChange={e=>upd("name",e.target.value)} placeholder="مثال: عباية سوداء أنيقة" style={S.field}/></div>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+                    <div><label style={S.lbl}>الفئة *</label><select value={form.cat} onChange={e=>upd("cat",e.target.value)} style={S.field}>{CATS.map(c=><option key={c}>{c}</option>)}</select></div>
+                    <div><label style={S.lbl}>التصنيف الفرعي *</label><input value={form.sub} onChange={e=>upd("sub",e.target.value)} placeholder="عبايات، فساتين..." style={S.field}/></div>
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+                    <div><label style={S.lbl}>السعر (د.ل) *</label><input type="number" value={form.price} onChange={e=>upd("price",e.target.value)} placeholder="0" style={S.field}/></div>
+                    <div><label style={S.lbl}>السعر القديم</label><input type="number" value={form.old} onChange={e=>upd("old",e.target.value)} placeholder="0" style={S.field}/></div>
+                  </div>
+                  <div>
+                    <label style={S.lbl}>المقاسات (افصلي بفاصلة) *</label>
+                    <input value={form.sizes} onChange={e=>upd("sizes",e.target.value)} placeholder="S,M,L,XL" style={S.field}/>
+                    <div style={{display:"flex",flexWrap:"wrap",gap:"4px",marginTop:"6px"}}>{form.sizes.split(",").filter(Boolean).map(s=>(<span key={s} style={{background:"#1e5f5f",color:"#f0e8d8",borderRadius:"6px",padding:"2px 8px",fontSize:"11px",fontWeight:"700"}}>{s.trim()}</span>))}</div>
+                  </div>
+                  <div>
+                    <label style={S.lbl}>الألوان HEX (افصلي بفاصلة)</label>
+                    <input value={form.colors} onChange={e=>upd("colors",e.target.value)} placeholder="#1a1a2e,#3aadad" style={S.field}/>
+                    <div style={{display:"flex",gap:"6px",marginTop:"6px"}}>{form.colors.split(",").filter(c=>c.trim().startsWith("#")).map((c,i)=>(<div key={i} style={{width:"26px",height:"26px",borderRadius:"50%",background:c.trim(),border:"2px solid #cce8e8"}} title={c.trim()}/>))}</div>
+                  </div>
+                  <div>
+                    <label style={S.lbl}>صورة المنتج *</label>
+                    {/* Upload from phone */}
+                    <input type="file" id="imgUpload" accept="image/*" style={{display:"none"}} onChange={e=>{
+                      const file=e.target.files[0];
+                      if(!file)return;
+                      if(file.size>3*1024*1024){toast("⚠ الصورة كبيرة جداً — الحد الأقصى 3MB","warn");return;}
+                      const reader=new FileReader();
+                      reader.onload=ev=>upd("img",ev.target.result);
+                      reader.readAsDataURL(file);
+                    }}/>
+                    <div style={{display:"flex",gap:"8px",marginBottom:"8px"}}>
+                      <button type="button" onClick={()=>document.getElementById('imgUpload').click()} style={{flex:1,padding:"12px",background:"#1e5f5f",color:"#f0e8d8",border:"none",borderRadius:"10px",cursor:"pointer",fontWeight:"700",fontSize:"13px",display:"flex",alignItems:"center",justifyContent:"center",gap:"8px"}}>
+                        <span style={{fontSize:"18px"}}>📸</span> رفع صورة من الهاتف
+                      </button>
+                    </div>
+                    {/* OR URL input */}
+                    <input value={form.img.startsWith("data:") ? "" : form.img} onChange={e=>upd("img",e.target.value)} placeholder="أو الصق رابط صورة من الإنترنت..." style={{...S.field,fontSize:"12px"}}/>
+                    {form.img&&(
+                      <div style={{marginTop:"8px",borderRadius:"10px",overflow:"hidden",height:"100px",background:"#d8f0f0",position:"relative"}}>
+                        <img src={form.img} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>e.target.style.display="none"}/>
+                        <button onClick={()=>upd("img","")} style={{position:"absolute",top:"6px",left:"6px",background:"rgba(0,0,0,.5)",border:"none",color:"#fff",borderRadius:"50%",width:"24px",height:"24px",cursor:"pointer",fontSize:"12px",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
+                        <span style={{position:"absolute",bottom:"6px",right:"8px",background:"rgba(0,0,0,.5)",color:"#fff",fontSize:"10px",borderRadius:"6px",padding:"2px 6px"}}>{form.img.startsWith("data:")?"✓ صورة مرفوعة":"✓ رابط"}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <label style={S.lbl}>وصف المنتج (اختياري)</label>
+                    <textarea value={form.desc} onChange={e=>upd("desc",e.target.value)} placeholder="وصف تفصيلي للمنتج..." style={{...S.field,height:"70px",resize:"vertical"}}/>
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"10px"}}>
+                    <div><label style={S.lbl}>الشارة</label><select value={form.badge} onChange={e=>upd("badge",e.target.value)} style={S.field}>{BADGES.map(b=><option key={b}>{b}</option>)}</select></div>
+                    <div><label style={S.lbl}>التقييم</label><input type="number" min="1" max="5" step="0.1" value={form.rating} onChange={e=>upd("rating",e.target.value)} style={S.field}/></div>
+                    <div><label style={S.lbl}>عدد التقييمات</label><input type="number" value={form.reviews} onChange={e=>upd("reviews",e.target.value)} style={S.field}/></div>
+                  </div>
+                  <div style={{display:"flex",gap:"10px"}}>
+                    <button onClick={()=>{setTab("prods");setEditId(null);setForm(blank);}} style={{flex:1,padding:"12px",background:"#fff",border:"1.5px solid #cce8e8",borderRadius:"12px",fontWeight:"600",cursor:"pointer",color:"#2a5f5f"}}>إلغاء</button>
+                    <button className="gh" onClick={saveProd} style={{flex:2,padding:"12px",background:"#3aadad",color:"#fff",border:"none",borderRadius:"12px",fontWeight:"700",cursor:"pointer",transition:"background .15s"}}>{editId?"💾 حفظ التعديلات":"✅ إضافة المنتج"}</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── ORDERS ── */}
+          {tab==="orders"&&(
+            <div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px",marginBottom:"16px"}}>
+                {[["إجمالي الطلبات",orders.length+"","🧾","#e8f8f8","#3aadad"],["الإيرادات",fmt(revenue),"💰","#f0fdf4","#166534"],["المعلّقة",orders.filter(o=>o.status==="معلّق").length+"","⏳","#fefce8","#92400e"],["الملغاة",orders.filter(o=>o.status==="ملغي").length+"","❌","#fff5f5","#991b1b"]].map(([l,v,ic,bg,co])=>(
+                  <div key={l} style={{background:bg,borderRadius:"12px",padding:"12px",border:"1px solid #cce8e8"}}>
+                    <p style={{fontSize:"18px",marginBottom:"4px"}}>{ic}</p>
+                    <p style={{fontSize:"17px",fontWeight:"900",color:co}}>{v}</p>
+                    <p style={{fontSize:"10px",color:"#7ab8b8",marginTop:"2px"}}>{l}</p>
+                  </div>
+                ))}
+              </div>
+              <div style={{display:"flex",gap:"6px",overflowX:"auto",scrollbarWidth:"none",marginBottom:"12px"}}>
+                {["الكل",...ORDER_STATUS].map(s=>(
+                  <button key={s} onClick={()=>setOFilter(s)} style={{flexShrink:0,padding:"6px 12px",borderRadius:"100px",border:"1.5px solid",borderColor:oFilter===s?"#1e5f5f":"#cce8e8",background:oFilter===s?"#1e5f5f":"#fff",color:oFilter===s?"#fff":"#2a5f5f",fontSize:"11px",fontWeight:"600",cursor:"pointer",transition:"all .18s"}}>{s}</button>
+                ))}
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
+                {filteredOrders.map(o=>(
+                  <div key={o.id} style={{background:"#fff",borderRadius:"12px",padding:"12px",border:"1px solid #cce8e8"}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"8px"}}>
+                      <div>
+                        <p style={{fontWeight:"700",fontSize:"12px",color:"#1e5f5f"}}>{o.id}</p>
+                        <p style={{fontSize:"10px",color:"#7ab8b8",marginTop:"1px"}}>{o.date} {o.time} · {o.customer.name}</p>
+                      </div>
+                      <span style={{fontWeight:"800",color:"#3aadad",fontSize:"13px"}}>{fmt(o.total)}</span>
+                    </div>
+                    <div style={{display:"flex",gap:"6px",alignItems:"center",flexWrap:"wrap"}}>
+                      {ORDER_STATUS.map(st=>(
+                        <button key={st} onClick={()=>updateOrderStatus(o.id,st)} style={{padding:"4px 8px",borderRadius:"20px",border:"1.5px solid",borderColor:o.status===st?STATUS_COLOR[st]:"#cce8e8",background:o.status===st?STATUS_COLOR[st]:"#fff",color:o.status===st?"#fff":"#2a5f5f",fontSize:"9px",fontWeight:"700",cursor:"pointer",transition:"all .15s"}}>{st}</button>
+                      ))}
+                    </div>
+                    <div style={{marginTop:"8px",fontSize:"11px",color:"#7ab8b8"}}>{o.items.map(i=>`${i.name}×${i.qty}`).join(" · ")}</div>
+                  </div>
+                ))}
+                {filteredOrders.length===0&&<div style={{textAlign:"center",padding:"30px",color:"#7ab8b8"}}><p>لا توجد طلبات</p></div>}
+              </div>
+            </div>
+          )}
+
+          {/* ── HERO ── */}
+          {tab==="hero"&&(
+            <div style={{display:"flex",flexDirection:"column",gap:"13px"}}>
+              <h3 style={{fontSize:"16px",fontWeight:"800",color:"#1e5f5f"}}>تعديل الواجهة الرئيسية</h3>
+              <div style={{background:hf.bg||"#1e5f5f",borderRadius:"14px",padding:"20px",marginBottom:"4px"}}>
+                <p style={{fontSize:"10px",letterSpacing:"2px",color:"#6ecece",marginBottom:"6px"}}>{hf.sub}</p>
+                <p style={{fontSize:"22px",fontWeight:"900",color:"#f0f8f8",lineHeight:"1.2",whiteSpace:"pre-line"}}>{hf.title}</p>
+                <p style={{fontSize:"12px",color:"#7ab8b8",marginTop:"6px"}}>{hf.desc}</p>
+              </div>
+              <div><label style={S.lbl}>العنوان الرئيسي</label><textarea value={hf.title} onChange={e=>setHf(f=>({...f,title:e.target.value}))} style={{...S.field,height:"60px",resize:"vertical"}}/></div>
+              <div><label style={S.lbl}>النص الصغير (فوق العنوان)</label><input value={hf.sub} onChange={e=>setHf(f=>({...f,sub:e.target.value}))} style={S.field}/></div>
+              <div><label style={S.lbl}>الوصف (تحت العنوان)</label><input value={hf.desc} onChange={e=>setHf(f=>({...f,desc:e.target.value}))} style={S.field}/></div>
+              <div>
+                <label style={S.lbl}>لون الخلفية</label>
+                <div style={{display:"flex",gap:"10px",alignItems:"center"}}>
+                  <input type="color" value={hf.bg||"#1e5f5f"} onChange={e=>setHf(f=>({...f,bg:e.target.value}))} style={{width:"48px",height:"40px",borderRadius:"8px",border:"1.5px solid #cce8e8",cursor:"pointer",padding:"2px"}}/>
+                  <input value={hf.bg||"#1e5f5f"} onChange={e=>setHf(f=>({...f,bg:e.target.value}))} style={{...S.field,flex:1}}/>
+                </div>
+              </div>
+              <button className="gh" onClick={saveHero} style={{padding:"13px",background:"#3aadad",color:"#fff",border:"none",borderRadius:"12px",fontWeight:"700",cursor:"pointer",fontSize:"14px",transition:"background .15s"}}>💾 حفظ الواجهة</button>
+            </div>
+          )}
+
+          {/* ── STORE INFO ── */}
+          {tab==="store"&&(
+            <div style={{display:"flex",flexDirection:"column",gap:"13px"}}>
+              <h3 style={{fontSize:"16px",fontWeight:"800",color:"#1e5f5f"}}>بيانات المتجر</h3>
+              {[["name","اسم المتجر"],["phone","رقم الهاتف"],["whatsapp","رقم واتساب الطلبات (مع رمز الدولة بدون +)"],["city","المدينة الرئيسية"]].map(([k,l])=>(<div key={k}><label style={S.lbl}>{l}</label><input value={sf[k]||""} onChange={e=>setSf(f=>({...f,[k]:e.target.value}))} placeholder={k==="whatsapp"?"مثال: 218910000000":""} style={S.field}/></div>))}
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+                <div><label style={S.lbl}>حد الشحن المجاني (د.ل)</label><input type="number" value={sf.freeShip} onChange={e=>setSf(f=>({...f,freeShip:Number(e.target.value)}))} style={S.field}/></div>
+                <div><label style={S.lbl}>تكلفة الشحن (د.ل)</label><input type="number" value={sf.shipCost} onChange={e=>setSf(f=>({...f,shipCost:Number(e.target.value)}))} style={S.field}/></div>
+              </div>
+              <div><label style={S.lbl}>مدة الإرجاع (أيام)</label><input type="number" value={sf.returnDays} onChange={e=>setSf(f=>({...f,returnDays:Number(e.target.value)}))} style={S.field}/></div>
+              <button className="gh" onClick={saveStore} style={{padding:"13px",background:"#3aadad",color:"#fff",border:"none",borderRadius:"12px",fontWeight:"700",cursor:"pointer",fontSize:"14px",transition:"background .15s"}}>💾 حفظ بيانات المتجر</button>
+            </div>
+          )}
+
+          {/* ── COUPONS ── */}
+          {tab==="coupons"&&(
+            <div>
+              <h3 style={{fontSize:"16px",fontWeight:"800",color:"#1e5f5f",marginBottom:"14px"}}>كوبونات الخصم 🏷</h3>
+              <div style={{background:"#f0f8f8",borderRadius:"14px",padding:"14px",marginBottom:"14px",border:"1px solid #cce8e8"}}>
+                <p style={{fontWeight:"700",fontSize:"13px",color:"#1e5f5f",marginBottom:"10px"}}>إضافة كوبون جديد</p>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px",marginBottom:"10px"}}>
+                  <div><label style={S.lbl}>كود الكوبون</label><input value={cpForm.code} onChange={e=>setCpForm(f=>({...f,code:e.target.value.toUpperCase()}))} placeholder="SALE20" style={S.field}/></div>
+                  <div><label style={S.lbl}>قيمة الخصم</label><input type="number" value={cpForm.discount} onChange={e=>setCpForm(f=>({...f,discount:e.target.value}))} placeholder="10" style={S.field}/></div>
+                </div>
+                <div style={{marginBottom:"10px"}}><label style={S.lbl}>نوع الخصم</label>
+                  <div style={{display:"flex",gap:"10px"}}>
+                    {[["percent","نسبة مئوية %"],["fixed","مبلغ ثابت د.ل"]].map(([k,l])=>(<label key={k} style={{display:"flex",alignItems:"center",gap:"6px",cursor:"pointer",fontSize:"13px",color:"#2a5f5f"}}><input type="radio" checked={cpForm.type===k} onChange={()=>setCpForm(f=>({...f,type:k}))} style={{accentColor:"#3aadad"}}/>{l}</label>))}
+                  </div>
+                </div>
+                <button className="gh" onClick={addCoupon} style={{width:"100%",padding:"11px",background:"#3aadad",color:"#fff",border:"none",borderRadius:"10px",fontWeight:"700",cursor:"pointer",fontSize:"13px",transition:"background .15s"}}>+ إضافة الكوبون</button>
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
+                {coupons.map((c,i)=>(
+                  <div key={i} style={{display:"flex",alignItems:"center",gap:"10px",background:"#fff",borderRadius:"12px",padding:"12px",border:"1px solid #cce8e8"}}>
+                    <div style={{flex:1}}>
+                      <p style={{fontWeight:"800",fontSize:"14px",color:"#1e5f5f",letterSpacing:"1px"}}>{c.code}</p>
+                      <p style={{fontSize:"12px",color:"#7ab8b8",marginTop:"2px"}}>خصم {c.discount}{c.type==="percent"?"%":" د.ل"}</p>
+                    </div>
+                    <button onClick={()=>{const r=coupons.map((x,j)=>j===i?{...x,active:!x.active}:x);setCoupons(r);syncToCloud({coupons:r});}} style={{padding:"5px 10px",borderRadius:"8px",border:"1.5px solid",borderColor:c.active?"#86c986":"#cce8e8",background:c.active?"#edf7ed":"#f0f8f8",color:c.active?"#2e7d2e":"#7ab8b8",fontSize:"11px",fontWeight:"700",cursor:"pointer"}}>{c.active?"مفعّل":"معطّل"}</button>
+                    <button className="dbh" onClick={()=>{const r=coupons.filter((_,j)=>j!==i);setCoupons(r);syncToCloud({coupons:r});}} style={{background:"#fff5f5",border:"1px solid #fecaca",borderRadius:"8px",padding:"5px 9px",fontSize:"12px",cursor:"pointer",transition:"all .15s",color:"#991b1b"}}>🗑</button>
+                  </div>
+                ))}
+                {coupons.length===0&&<p style={{textAlign:"center",color:"#7ab8b8",padding:"20px"}}>لا توجد كوبونات</p>}
+              </div>
+            </div>
+          )}
+
+          {/* ── BANK ── */}
+          {tab==="bank"&&(
+            <div style={{display:"flex",flexDirection:"column",gap:"13px"}}>
+              <h3 style={{fontSize:"16px",fontWeight:"800",color:"#1e5f5f"}}>🏦 المعلومات البنكية</h3>
+              <div style={{background:"#f0f8f8",borderRadius:"12px",padding:"12px 14px",fontSize:"12px",color:"#2a5f5f",border:"1px solid #cce8e8"}}>
+                💡 هذه المعلومات ستظهر للعميل عند اختياره التحويل البنكي في الدفع
+              </div>
+              {[["bankName","اسم المصرف"],["accountHolder","اسم صاحب الحساب"],["accountNum","رقم الحساب"],["iban","رقم IBAN"]].map(([k,l])=>(
+                <div key={k}>
+                  <label style={S.lbl}>{l}</label>
+                  <input value={bf[k]||""} onChange={e=>setBf(f=>({...f,[k]:e.target.value}))} placeholder={k==="iban"?"LY00 0000 0000 0000 0000 0000":l} style={S.field}/>
+                </div>
+              ))}
+              <button className="gh" onClick={()=>{setBankInfo(bf);syncToCloud({bankInfo:bf});toast("✓ تم حفظ المعلومات البنكية");}} style={{padding:"13px",background:"#3aadad",color:"#fff",border:"none",borderRadius:"12px",fontWeight:"700",cursor:"pointer",fontSize:"14px",transition:"background .15s"}}>💾 حفظ المعلومات البنكية</button>
+            </div>
+          )}
+
+          {/* ── FAQ ── */}
+          {tab==="faq"&&(
+            <div style={{display:"flex",flexDirection:"column",gap:"13px"}}>
+              <h3 style={{fontSize:"16px",fontWeight:"800",color:"#1e5f5f"}}>❓ الأسئلة الشائعة</h3>
+              {/* Add new */}
+              <div style={{background:"#f0f8f8",borderRadius:"14px",padding:"14px",border:"1px solid #cce8e8"}}>
+                <p style={{fontWeight:"700",fontSize:"13px",color:"#1e5f5f",marginBottom:"10px"}}>➕ إضافة سؤال جديد</p>
+                <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+                  <div><label style={S.lbl}>السؤال</label><input value={newFaq.q} onChange={e=>setNewFaq(f=>({...f,q:e.target.value}))} placeholder="مثال: كيف أتتبع طلبي؟" style={S.field}/></div>
+                  <div><label style={S.lbl}>الجواب</label><textarea value={newFaq.a} onChange={e=>setNewFaq(f=>({...f,a:e.target.value}))} placeholder="اكتب الجواب هنا..." style={{...S.field,height:"70px",resize:"none"}}/></div>
+                  <button className="gh" onClick={()=>{
+                    if(!newFaq.q||!newFaq.a){toast("⚠ أدخل السؤال والجواب","warn");return;}
+                    const updated=[...faqEdit,{...newFaq}];
+                    setFaqEdit(updated);setFaqList(updated);syncToCloud({faqList:updated});
+                    setNewFaq({q:"",a:""});toast("✓ تم إضافة السؤال");
+                  }} style={{padding:"11px",background:"#3aadad",color:"#fff",border:"none",borderRadius:"10px",fontWeight:"700",cursor:"pointer",fontSize:"13px",transition:"background .15s"}}>+ إضافة</button>
+                </div>
+              </div>
+              {/* Existing FAQs */}
+              <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
+                {faqEdit.map((item,i)=>(
+                  <div key={i} style={{background:"#fff",borderRadius:"12px",padding:"12px",border:"1px solid #cce8e8"}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"6px"}}>
+                      <p style={{fontWeight:"700",color:"#1e5f5f",fontSize:"13px",flex:1}}>س: {item.q}</p>
+                      <button onClick={()=>{const u=faqEdit.filter((_,j)=>j!==i);setFaqEdit(u);setFaqList(u);syncToCloud({faqList:u});toast("🗑 تم الحذف","warn");}} style={{background:"#fff5f5",border:"1px solid #fecaca",borderRadius:"6px",padding:"3px 8px",fontSize:"11px",color:"#b91c1c",cursor:"pointer",marginRight:"8px",flexShrink:0}}>🗑</button>
+                    </div>
+                    <p style={{fontSize:"12px",color:"#2a5f5f",lineHeight:"1.6"}}>ج: {item.a}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ── SETTINGS ── */}
+          {tab==="settings"&&(
+            <div style={{display:"flex",flexDirection:"column",gap:"14px"}}>
+              {/* Change password */}
+              <div style={{background:"#fff",borderRadius:"16px",padding:"18px",border:"1px solid #cce8e8"}}>
+                <h3 style={{fontSize:"15px",fontWeight:"800",color:"#1e5f5f",marginBottom:"14px"}}>🔐 تغيير كلمة المرور</h3>
+                <div style={{display:"flex",flexDirection:"column",gap:"11px"}}>
+                  <div><label style={S.lbl}>كلمة المرور الحالية</label><input type="password" value={pw.cur} onChange={e=>setPw(p=>({...p,cur:e.target.value}))} placeholder="••••••••" style={S.field}/></div>
+                  <div><label style={S.lbl}>كلمة المرور الجديدة</label><input type="password" value={pw.n1} onChange={e=>setPw(p=>({...p,n1:e.target.value}))} placeholder="6 أحرف على الأقل" style={S.field}/></div>
+                  <div><label style={S.lbl}>تأكيد كلمة المرور الجديدة</label><input type="password" value={pw.n2} onChange={e=>setPw(p=>({...p,n2:e.target.value}))} placeholder="أعيدي الكتابة" style={S.field}/></div>
+                  <button className="gh" onClick={changePass} style={{padding:"12px",background:"#1e5f5f",color:"#fff",border:"none",borderRadius:"12px",fontWeight:"700",cursor:"pointer",fontSize:"14px",transition:"background .15s"}}>🔒 تغيير كلمة المرور</button>
+                </div>
+              </div>
+              {/* Stats */}
+              <div style={{background:"#fff",borderRadius:"16px",padding:"18px",border:"1px solid #cce8e8"}}>
+                <h3 style={{fontSize:"15px",fontWeight:"800",color:"#1e5f5f",marginBottom:"14px"}}>📊 إحصائيات سريعة</h3>
+                {[["إجمالي المنتجات",prods.length],["المنتجات المفعّلة",prods.filter(p=>p.active!==false).length],["إجمالي الطلبات",orders.length],["الطلبات المنجزة",orders.filter(o=>o.status==="تم التسليم").length],["إجمالي الإيرادات",fmt(revenue)]].map(([l,v])=>(
+                  <div key={l} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:"1px solid #e8f5f5",fontSize:"13px"}}>
+                    <span style={{color:"#2a5f5f"}}>{l}</span>
+                    <span style={{fontWeight:"700",color:"#1e5f5f"}}>{v}</span>
+                  </div>
+                ))}
+              </div>
+              {/* Danger */}
+              <div style={{background:"#fff5f5",borderRadius:"16px",padding:"18px",border:"1px solid #fecaca"}}>
+                <h3 style={{fontSize:"15px",fontWeight:"800",color:"#b91c1c",marginBottom:"12px"}}>⚠️ منطقة الخطر</h3>
+                <button onClick={()=>setDel("orders")} style={{width:"100%",padding:"11px",background:"#fff",border:"1.5px solid #fecaca",borderRadius:"10px",color:"#b91c1c",fontWeight:"700",cursor:"pointer",fontSize:"13px",marginBottom:"8px"}}>🗑 مسح جميع الطلبات</button>
+                <button onClick={()=>setDel("reset")} style={{width:"100%",padding:"11px",background:"#fff",border:"1.5px solid #fecaca",borderRadius:"10px",color:"#b91c1c",fontWeight:"700",cursor:"pointer",fontSize:"13px"}}>↺ إعادة تعيين المنتجات</button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Confirm dialog */}
+      {del&&(
+        <div style={{...S.overlay,zIndex:1100}}>
+          <div style={{background:"#fff",borderRadius:"18px",width:"90%",maxWidth:"280px",padding:"28px 22px",textAlign:"center",boxShadow:"0 24px 60px rgba(0,0,0,.3)"}}>
+            <div style={{fontSize:"44px",marginBottom:"12px"}}>{del==="reset"||del==="orders"?"⚠️":"🗑"}</div>
+            <h3 style={{fontSize:"16px",fontWeight:"800",color:"#1e5f5f",marginBottom:"8px"}}>
+              {del==="reset"?"إعادة تعيين المنتجات؟":del==="orders"?"مسح جميع الطلبات؟":"حذف المنتج؟"}
+            </h3>
+            <p style={{fontSize:"13px",color:"#7ab8b8",marginBottom:"20px"}}>لا يمكن التراجع عن هذا الإجراء</p>
+            <div style={{display:"flex",gap:"10px"}}>
+              <button onClick={()=>setDel(null)} style={{flex:1,padding:"12px",background:"#fff",border:"1.5px solid #cce8e8",borderRadius:"12px",fontWeight:"600",cursor:"pointer",color:"#2a5f5f"}}>إلغاء</button>
+              <button onClick={()=>{
+                if(del==="reset"){const r=DEF_PRODS;setProds(r);syncToCloud({products:r});toast("↺ تم الإعادة","warn");}
+                else if(del==="orders"){setOrders([]);toast("🗑 تم مسح الطلبات","warn");}
+                else{const r=prods.filter(x=>x.id!==del);setProds(r);syncToCloud({products:r});toast("🗑 تم الحذف","warn");}
+                setDel(null);
+              }} style={{flex:1,padding:"12px",background:"#c0392b",color:"#fff",border:"none",borderRadius:"12px",fontWeight:"700",cursor:"pointer"}}>تأكيد</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Shared styles ─────────────────────────────────────────────────────────────
+const S = {
+  iconBtn:{background:"#fff",border:"1.5px solid #cce8e8",borderRadius:"10px",padding:"6px 14px",cursor:"pointer",fontSize:"18px",color:"#2a5f5f"},
+  lbl:{display:"block",fontSize:"12px",fontWeight:"700",color:"#2a5f5f",marginBottom:"5px"},
+  field:{width:"100%",padding:"11px 13px",border:"1.5px solid #cce8e8",borderRadius:"10px",fontSize:"13px",outline:"none",background:"#fff",color:"#1e5f5f",display:"block"},
+  qb:{width:"34px",height:"34px",borderRadius:"10px",border:"1.5px solid #cce8e8",background:"#fff",cursor:"pointer",fontSize:"18px",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:"700",color:"#2a5f5f",transition:"background .15s"},
+  accBtn:{display:"flex",alignItems:"center",gap:"14px",background:"#fff",border:"1px solid #cce8e8",borderRadius:"14px",padding:"16px",cursor:"pointer",textAlign:"right",width:"100%",transition:"background .15s"},
+  overlay:{position:"fixed",inset:0,background:"rgba(20,10,0,.65)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px",backdropFilter:"blur(5px)"},
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
