@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="UNO نقاط"/>
+<meta name="theme-color" content="#FF4655"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon.svg"/>
+<title>UNO نقاط</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#0d0d1a;color:#fff;font-family:-apple-system,sans-serif;direction:rtl;overscroll-behavior:none;min-height:100vh}
+button{font-family:inherit;cursor:pointer;-webkit-appearance:none}
+input{font-family:inherit;-webkit-appearance:none}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+input[type=number]{-moz-appearance:textfield}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+const COLORS=["#FF4655","#00C9FF","#F5C400","#00E676","#FF6D00","#B388FF","#FF80AB"];
+const CREW=["أبوشناف","الجطلاوي","ابشير","زقوط","الصادي","تيبار"];
+const CARDS=[{l:"0",v:0},{l:"1",v:1},{l:"2",v:2},{l:"3",v:3},{l:"4",v:4},{l:"5",v:5},{l:"6",v:6},{l:"7",v:7},{l:"8",v:8},{l:"9",v:9},{l:"عكس",v:10},{l:"تخطي",v:10},{l:"رسم",v:10},{l:"+2",v:10},{l:"ملون",v:10},{l:"+4",v:25}];
+const KEY="uno-v5";
+const WARM=["😌","😏","🫠","😅","🌝","🫣"];
+
+function rankLabel(r,t){
+  if(r===0)return{e:"🏆",t:"البطل",c:"#F5C400",bg:"rgba(245,196,0,0.1)"};
+  if(r===t-1)return{e:"💀",t:"العكرة",c:"#FF4655",bg:"rgba(255,70,85,0.1)"};
+  if(r===t-2&&t>2)return{e:"🤦",t:"مساعد العكرة",c:"#FF6D00",bg:"rgba(255,109,0,0.08)"};
+  return{e:WARM[(r-1)%WARM.length],t:"المنطقة الدافئة 🌡️",c:"#60CDCD",bg:"rgba(96,205,205,0.07)"};
+}
+const tot=p=>p.scores.reduce((a,b)=>a+b,0);
+const aSort=(a,b)=>a.name.localeCompare(b.name,"ar");
+const lsSave=s=>{try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}};
+const lsLoad=()=>{try{const v=localStorage.getItem(KEY);return v?JSON.parse(v):null;}catch(e){return null;}};
+const lsClear=()=>{try{localStorage.removeItem(KEY);}catch(e){}};
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let S={
+  screen:"setup",
+  crew:CREW.map((n,i)=>({id:i,name:n,sel:true,color:COLORS[i]})),
+  players:[],round:1,inputs:{},confirmed:[],
+  picker:null,tab:"game",saved:null,flash:false,err:""
+};
+
+// ── DOM helpers ───────────────────────────────────────────────────────────────
+const el=(tag,props={},kids=[])=>{
+  const e=document.createElement(tag);
+  for(const[k,v]of Object.entries(props)){
+    if(k==="css")Object.assign(e.style,v);
+    else if(k==="on")Object.entries(v).forEach(([ev,fn])=>e.addEventListener(ev,fn));
+    else if(k==="txt")e.textContent=v;
+    else if(k==="html")e.innerHTML=v;
+    else if(k==="val"){e.value=v??"";}
+    else if(k==="dis")e.disabled=v;
+    else if(k==="ph")e.placeholder=v;
+    else if(k==="type")e.type=v;
+    else if(k==="min")e.min=v;
+    else e.setAttribute(k,v);
+  }
+  kids.flat(2).forEach(k=>{
+    if(k==null||k===false)return;
+    e.appendChild(typeof k==="string"||typeof k==="number"?document.createTextNode(String(k)):k);
+  });
+  return e;
+};
+const div=(props,kids)=>el("div",props,kids);
+const btn=(props,kids)=>el("button",props,kids);
+const inp=(props)=>el("input",props);
+const span=(props,kids)=>el("span",props,kids);
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function render(){
+  const root=document.getElementById("app");
+  root.innerHTML="";
+  root.appendChild(S.screen==="setup"?setupScreen():gameScreen());
+}
+
+// ── Setup ─────────────────────────────────────────────────────────────────────
+function setupScreen(){
+  const{crew,saved}=S;
+  const sel=crew.filter(p=>p.sel);
+  const ok=sel.length>=2;
+
+  const wrap=div({css:{minHeight:"100vh",background:"#0d0d1a",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"20px 16px"}});
+
+  // Logo
+  wrap.appendChild(div({css:{marginBottom:"22px",textAlign:"center"}},[
+    div({css:{width:"68px",height:"94px",borderRadius:"14px",margin:"0 auto 12px",background:"linear-gradient(145deg,#FF4655,#c62030)",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:"900",fontSize:"24px",color:"#fff",boxShadow:"0 8px 32px #FF465560",border:"3px solid rgba(255,255,255,0.15)",position:"relative"}},["UNO",
+      div({css:{position:"absolute",width:"24px",height:"36px",borderRadius:"6px",background:"rgba(255,255,255,0.1)",border:"2px solid rgba(255,255,255,0.2)",top:"-5px",left:"-5px"}})
+    ]),
+    div({css:{fontSize:"20px",fontWeight:"800"},txt:"حاسبة النقاط"}),
+    div({css:{fontSize:"11px",color:"rgba(255,255,255,0.3)",marginTop:"3px"},txt:"من البطل للعكرة 🃏"})
+  ]));
+
+  // Saved banner
+  if(saved){
+    wrap.appendChild(div({css:{width:"100%",maxWidth:"420px",background:"rgba(245,196,0,0.08)",border:"1px solid rgba(245,196,0,0.3)",borderRadius:"14px",padding:"13px 16px",marginBottom:"14px"}},[
+      div({css:{fontSize:"11px",color:"#F5C400",fontWeight:"700",marginBottom:"5px"},txt:`🕐 لعبة محفوظة — جولة ${saved.round}`}),
+      div({css:{fontSize:"12px",color:"rgba(255,255,255,0.65)",marginBottom:"10px"},txt:saved.players.filter(p=>p.active).map(p=>p.name).join("، ")}),
+      div({css:{display:"flex",gap:"8px"}},[
+        btn({css:{flex:"2",padding:"8px",borderRadius:"9px",border:"none",background:"#F5C400",color:"#0d0d1a",fontWeight:"800",fontSize:"13px"},on:{click:()=>{S.players=saved.players;S.round=saved.round;S.inputs={};S.confirmed=[];S.tab="game";S.screen="game";render();}}},["↩ استكمال"]),
+        btn({css:{flex:"1",padding:"8px",borderRadius:"9px",border:"1px solid rgba(255,70,85,0.3)",background:"rgba(255,70,85,0.1)",color:"#FF4655",fontWeight:"700",fontSize:"12px"},on:{click:()=>{lsClear();S.saved=null;render();}}},["حذف"])
+      ])
+    ]));
+  }
+
+  // Player list
+  const listBox=div({css:{width:"100%",maxWidth:"420px",background:"rgba(255,255,255,0.04)",borderRadius:"16px",padding:"16px",marginBottom:"12px",border:"1px solid rgba(255,255,255,0.08)"}});
+  listBox.appendChild(div({css:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"12px"}},[
+    div({css:{fontSize:"12px",color:"rgba(255,255,255,0.4)",fontWeight:"700"},txt:"اختر اللاعبين"}),
+    div({css:{fontSize:"11px",color:ok?"#00E676":"#FF4655",fontWeight:"700"},txt:`${sel.length} محددين ${sel.length<2?"(2 على الأقل)":"✓"}`})
+  ]));
+
+  crew.forEach((p,idx)=>{
+    const row=div({css:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"7px"}});
+    row.appendChild(btn({css:{width:"28px",height:"28px",borderRadius:"7px",border:`2px solid ${p.sel?p.color:"rgba(255,255,255,0.15)"}`,background:p.sel?`${p.color}25`:"transparent",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:"0",fontSize:"14px",color:"#fff"},on:{click:()=>{S.crew=S.crew.map(c=>c.id===p.id?{...c,sel:!c.sel}:c);render();}}},p.sel?["✓"]:[]));
+    row.appendChild(div({css:{width:"8px",height:"8px",borderRadius:"50%",background:p.color,flexShrink:"0",opacity:p.sel?"1":"0.3"}}));
+    row.appendChild(span({css:{flex:"1",fontSize:"14px",fontWeight:p.sel?"700":"400",color:p.sel?"#fff":"rgba(255,255,255,0.3)",cursor:"pointer"},on:{click:()=>{const n=prompt("تعديل الاسم:",p.name);if(n&&n.trim())S.crew=S.crew.map(c=>c.id===p.id?{...c,name:n.trim()}:c);render();}}},["✏️ "+p.name]));
+    if(idx>=CREW.length){
+      row.appendChild(btn({css:{width:"26px",height:"26px",borderRadius:"6px",border:"1px solid rgba(255,70,85,0.25)",background:"rgba(255,70,85,0.1)",color:"#FF4655",fontSize:"13px"},on:{click:()=>{S.crew=S.crew.filter(c=>c.id!==p.id);render();}}},["✕"]));
+    }
+    listBox.appendChild(row);
+  });
+
+  // Add extra input
+  const extraInp=inp({type:"text",ph:"إضافة لاعب جديد...",css:{flex:"1",background:"rgba(255,255,255,0.06)",border:"1px dashed rgba(255,255,255,0.15)",borderRadius:"8px",padding:"7px 11px",color:"#fff",fontSize:"13px",outline:"none"}});
+  const addExtra=()=>{
+    const n=extraInp.value.trim();if(!n)return;
+    const uc=S.crew.map(c=>c.color);
+    const color=COLORS.find(c=>!uc.includes(c))||COLORS[S.crew.length%COLORS.length];
+    S.crew=[...S.crew,{id:Date.now(),name:n,sel:true,color}];
+    render();
+  };
+  extraInp.addEventListener("keydown",e=>{if(e.key==="Enter")addExtra();});
+  listBox.appendChild(div({css:{display:"flex",gap:"7px",marginTop:"10px"}},[
+    extraInp,
+    btn({css:{padding:"7px 13px",borderRadius:"8px",border:"none",background:"rgba(0,230,118,0.15)",color:"#00E676",fontWeight:"800",fontSize:"14px"},on:{click:addExtra}},["+"]) 
+  ]));
+  wrap.appendChild(listBox);
+
+  wrap.appendChild(btn({
+    css:{width:"100%",maxWidth:"420px",padding:"15px",borderRadius:"14px",border:"none",background:ok?"linear-gradient(135deg,#FF4655,#c62030)":"rgba(255,255,255,0.06)",color:ok?"#fff":"rgba(255,255,255,0.2)",fontSize:"16px",fontWeight:"800",boxShadow:ok?"0 6px 24px #FF465550":"none"},
+    dis:!ok,
+    on:{click:()=>{
+      if(!ok)return;
+      lsClear();
+      S.players=sel.map((p,i)=>({id:p.id,name:p.name,color:COLORS[i%COLORS.length],scores:[],active:true,joinedAtRound:1}));
+      S.round=1;S.inputs={};S.confirmed=[];S.tab="game";S.screen="game";render();
+    }}
+  },[saved?"بدء لعبة جديدة 🎮":"ابدأ اللعبة 🎮"]));
+
+  return wrap;
+}
+
+// ── Game ──────────────────────────────────────────────────────────────────────
+function gameScreen(){
+  const{players,round,inputs,confirmed,picker,tab,flash,err}=S;
+  const active=players.filter(p=>p.active);
+  const byScore=[...active].sort((a,b)=>tot(a)-tot(b));
+  const byAlpha=[...active].sort(aSort);
+
+  const wrap=div({css:{minHeight:"100vh",background:"#0d0d1a",paddingBottom:"50px"}});
+
+  // Header
+  wrap.appendChild(div({css:{background:"rgba(255,255,255,0.04)",borderBottom:"1px solid rgba(255,255,255,0.07)",padding:"11px 15px",display:"flex",alignItems:"center",justifyContent:"space-between"}},[
+    div({css:{display:"flex",alignItems:"center",gap:"8px"}},[
+      div({css:{width:"25px",height:"36px",borderRadius:"6px",background:"linear-gradient(145deg,#FF4655,#c62030)",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:"900",fontSize:"8px",color:"#fff",border:"2px solid rgba(255,255,255,0.2)"}},["UNO"]),
+      span({css:{fontWeight:"800",fontSize:"15px"}},["حاسبة النقاط"])
+    ]),
+    div({css:{display:"flex",gap:"6px",alignItems:"center"}},[
+      span({css:{fontSize:"10px",color:flash?"#00E676":"rgba(255,255,255,0.18)",fontWeight:"700"}},flash?["✓ محفوظ"]:["💾"]),
+      div({css:{background:"rgba(255,255,255,0.08)",borderRadius:"20px",padding:"3px 11px",fontSize:"12px",fontWeight:"700"}},["جولة "+round]),
+      btn({css:{background:"none",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"8px",color:"rgba(255,255,255,0.3)",padding:"3px 8px",fontSize:"11px"},on:{click:()=>{if(confirm("مسح اللعبة؟ سيتم حذف جميع النقاط نهائياً")){lsClear();S.screen="setup";S.saved=null;render();}}}},["جديدة"])
+    ])
+  ]));
+
+  const inner=div({css:{maxWidth:"520px",margin:"0 auto",padding:"0 12px"}});
+
+  // Tabs
+  const tabBar=div({css:{display:"flex",marginTop:"12px",marginBottom:"13px",background:"rgba(255,255,255,0.05)",borderRadius:"10px",padding:"3px"}});
+  [["game","🎮 اللعبة"],["board","🏅 الترتيب"],["history","📋 السجل"]].forEach(([v,l])=>{
+    tabBar.appendChild(btn({css:{flex:"1",padding:"8px 0",borderRadius:"8px",border:"none",background:tab===v?"rgba(255,255,255,0.11)":"transparent",color:tab===v?"#fff":"rgba(255,255,255,0.35)",fontWeight:"700",fontSize:"12px"},on:{click:()=>{S.tab=v;render();}}},l.split("")));
+  });
+  inner.appendChild(tabBar);
+
+  // ── GAME TAB
+  if(tab==="game"){
+    // Progress
+    const fc=active.filter(p=>confirmed.includes(p.id)).length;
+    const pct=active.length?Math.round((fc/active.length)*100):0;
+    inner.appendChild(div({css:{marginBottom:"10px"}},[
+      div({css:{display:"flex",justifyContent:"space-between",marginBottom:"5px"}},[
+        span({css:{fontSize:"11px",color:"rgba(255,255,255,0.35)",fontWeight:"700"}},["الجولة "+round]),
+        span({css:{fontSize:"11px",fontWeight:"700",color:fc===active.length?"#00E676":"rgba(255,255,255,0.4)"}},[""+fc+"/"+active.length+" ✓"])
+      ]),
+      div({css:{height:"4px",background:"rgba(255,255,255,0.07)",borderRadius:"4px",overflow:"hidden"}},[
+        div({css:{height:"100%",width:pct+"%",background:fc===active.length?"#00E676":"#FF4655",borderRadius:"4px"}})
+      ])
+    ]));
+
+    // Player cards
+    byAlpha.forEach(p=>{
+      const iv=inputs[p.id]??"";
+      const locked=confirmed.includes(p.id);
+      const open=picker===p.id&&!locked;
+      const nv=parseInt(iv);
+      const zero=locked&&nv===0;
+
+      const doConfirm=()=>{
+        if(!iv&&iv!=="0")return;
+        S.confirmed=[...S.confirmed,p.id];
+        S.picker=null;
+        doSave();
+        render();
+      };
+      const doUnlock=()=>{S.confirmed=S.confirmed.filter(id=>id!==p.id);render();};
+
+      const card=div({css:{border:`1px solid ${locked?(zero?"#00E67640":p.color+"50"):p.color+"26"}`,borderRight:`4px solid ${locked?(zero?"#00E676":p.color):p.color+"60"}`,borderRadius:"13px",padding:"11px 13px",marginBottom:"8px",background:locked?(zero?"rgba(0,230,118,0.08)":"rgba(255,255,255,0.03)"):"rgba(255,255,255,0.05)",opacity:locked?"0.78":"1"}});
+
+      // Top row
+      const topRow=div({css:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:locked?"0":"8px"}});
+      topRow.appendChild(div({css:{display:"flex",alignItems:"center",gap:"6px"}},[
+        span({css:{fontSize:"16px"}},locked?(zero?["✅"]:["🔒"]):["🎴"]),
+        div({},[
+          div({css:{fontWeight:"800",fontSize:"14px",cursor:"pointer",lineHeight:"1.2"},on:{click:()=>{const n=prompt("تعديل الاسم:",p.name);if(n&&n.trim())S.players=S.players.map(pl=>pl.id===p.id?{...pl,name:n.trim()}:pl);render();}}},
+            [p.name+(p.joinedAtRound>1?" +ج"+p.joinedAtRound:"")]
+          ),
+          locked?div({css:{fontSize:"11px",color:zero?"#00E676":"rgba(255,255,255,0.4)",fontWeight:"700",marginTop:"1px"}},zero?["أنهى أوراقه 🎉"]:[nv+" نقطة مسجّلة"]):null
+        ])
+      ]));
+      const rightBtns=div({css:{display:"flex",alignItems:"center",gap:"6px"}});
+      if(locked)rightBtns.appendChild(btn({css:{padding:"4px 10px",borderRadius:"7px",background:"rgba(255,200,0,0.1)",border:"1px solid rgba(255,200,0,0.25)",color:"#F5C400",fontSize:"11px",fontWeight:"700"},on:{click:doUnlock}},["تعديل ✏️"]));
+      rightBtns.appendChild(btn({css:{width:"28px",height:"28px",borderRadius:"7px",background:"rgba(255,150,0,0.1)",border:"1px solid rgba(255,150,0,0.22)",color:"#FF9500",fontSize:"12px"},on:{click:()=>{S.players=S.players.map(pl=>pl.id===p.id?{...pl,active:!pl.active}:pl);delete S.inputs[p.id];S.confirmed=S.confirmed.filter(id=>id!==p.id);render();}}},["⏸"]));
+      topRow.appendChild(rightBtns);
+      card.appendChild(topRow);
+
+      if(!locked){
+        // Input row — KEY FIX: no re-render on typing, just update state + button DOM
+        const numInp=inp({type:"number",min:"0",ph:"0",val:iv,css:{flex:"1",minWidth:"0",background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:"9px",padding:"0 8px",color:"#fff",fontSize:"20px",fontWeight:"800",textAlign:"center",outline:"none",direction:"ltr",height:"48px"}});
+
+        // Confirm button — starts green if value exists, grey if not
+        const hasVal=iv!=="";
+        const confBtn=div({css:{flex:"1",minWidth:"0",height:"48px",borderRadius:"10px",background:hasVal?"linear-gradient(135deg,#00C853,#00E676)":"rgba(255,255,255,0.03)",border:hasVal?"none":"1px dashed rgba(255,255,255,0.07)",display:"flex",alignItems:"center",justifyContent:"center",cursor:hasVal?"pointer":"default",boxShadow:hasVal?"0 3px 12px rgba(0,230,118,0.35)":"none"}});
+        confBtn.innerHTML=hasVal?"<span style='font-size:22px;font-weight:900;color:#0d0d1a'>✓</span>":"<span style='font-size:10px;color:rgba(255,255,255,0.18)'>✓</span>";
+        if(hasVal)confBtn.addEventListener("click",doConfirm);
+
+        // On input: update state & button WITHOUT re-rendering entire page
+        numInp.addEventListener("input",e=>{
+          const val=e.target.value;
+          S.inputs={...S.inputs,[p.id]:val};
+          const has=val!=="";
+          confBtn.style.background=has?"linear-gradient(135deg,#00C853,#00E676)":"rgba(255,255,255,0.03)";
+          confBtn.style.border=has?"none":"1px dashed rgba(255,255,255,0.07)";
+          confBtn.style.boxShadow=has?"0 3px 12px rgba(0,230,118,0.35)":"none";
+          confBtn.style.cursor=has?"pointer":"default";
+          confBtn.innerHTML=has?"<span style='font-size:22px;font-weight:900;color:#0d0d1a'>✓</span>":"<span style='font-size:10px;color:rgba(255,255,255,0.18)'>✓</span>";
+          // Re-attach click handler
+          confBtn.onclick=has?doConfirm:null;
+        });
+        numInp.addEventListener("keydown",e=>{if(e.key==="Enter"&&S.inputs[p.id])doConfirm();});
+
+        const cardPickerBtn=btn({css:{width:"36px",height:"48px",borderRadius:"8px",background:open?`${p.color}28`:"rgba(255,255,255,0.06)",border:`1px solid ${open?p.color:"rgba(255,255,255,0.1)"}`,color:"#fff",fontSize:"16px",flexShrink:"0"},on:{click:()=>{S.picker=S.picker===p.id?null:p.id;render();}}},["🃏"]);
+
+        const inputRow=div({css:{display:"flex",gap:"6px",alignItems:"stretch"}},[numInp,cardPickerBtn,confBtn]);
+        card.appendChild(inputRow);
+
+        if(open){
+          const grid=div({css:{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"5px",marginTop:"8px"}});
+          CARDS.forEach(c=>{
+            grid.appendChild(btn({css:{padding:"6px 3px",borderRadius:"7px",background:`${p.color}12`,border:`1px solid ${p.color}30`,color:"#fff",fontSize:"11px",fontWeight:"700",display:"flex",flexDirection:"column",alignItems:"center",gap:"1px"},on:{click:()=>{
+              const cur=parseInt(S.inputs[p.id]||0);
+              S.inputs={...S.inputs,[p.id]:String(cur+c.v)};
+              render();
+            }}},[c.l,span({css:{fontSize:"9px",color:p.color,fontWeight:"800"}},["+"+c.v])]));
+          });
+          card.appendChild(grid);
+        }
+      }
+      inner.appendChild(card);
+    });
+
+    // Paused
+    const paused=players.filter(p=>!p.active);
+    if(paused.length){
+      const ps=div({css:{marginBottom:"9px"}},[div({css:{fontSize:"10px",color:"rgba(255,255,255,0.25)",marginBottom:"5px",fontWeight:"700"}},["⏸ موقوفون"])]);
+      paused.forEach(p=>{
+        ps.appendChild(div({css:{display:"flex",alignItems:"center",gap:"9px",background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:"9px",padding:"8px 12px",marginBottom:"5px",opacity:"0.55"}},[
+          div({css:{width:"7px",height:"7px",borderRadius:"50%",background:p.color}}),
+          span({css:{flex:"1",fontWeight:"600",fontSize:"13px"}},[p.name]),
+          span({css:{fontSize:"15px",fontWeight:"800",color:p.color}},[String(tot(p))]),
+          btn({css:{padding:"3px 9px",borderRadius:"6px",border:"1px solid rgba(0,230,118,0.25)",background:"rgba(0,230,118,0.08)",color:"#00E676",fontSize:"11px",fontWeight:"700"},on:{click:()=>{S.players=S.players.map(pl=>pl.id===p.id?{...pl,active:true}:pl);render();}}},["استئناف"])
+        ]));
+      });
+      inner.appendChild(ps);
+    }
+
+    // Add player
+    inner.appendChild(btn({css:{width:"100%",padding:"9px",borderRadius:"9px",border:"1px dashed rgba(255,255,255,0.13)",background:"transparent",color:"rgba(255,255,255,0.3)",fontSize:"12px",marginBottom:"9px"},on:{click:()=>{
+      const n=prompt("اسم اللاعب الجديد:");if(!n||!n.trim())return;
+      const uc=S.players.map(p=>p.color);
+      const color=COLORS.find(c=>!uc.includes(c))||COLORS[S.players.length%COLORS.length];
+      const sb=[...S.players.filter(p=>p.active)].sort((a,b)=>tot(a)-tot(b));
+      const worst=sb.length?tot(sb[sb.length-1])+5:0;
+      const pad=S.round>1?[worst,...Array(S.round-2).fill(0)]:[];
+      S.players=[...S.players,{id:Date.now(),name:n.trim(),scores:pad,color,active:true,joinedAtRound:S.round}];
+      render();
+    }}},["+ إضافة لاعب الآن"]));
+
+    // Error
+    if(err)inner.appendChild(div({css:{background:"rgba(255,70,85,0.1)",border:"1px solid rgba(255,70,85,0.28)",borderRadius:"9px",padding:"9px 13px",marginBottom:"7px",fontSize:"12px",color:"#FF4655",fontWeight:"600",textAlign:"center"}},err.split("")));
+
+    // Commit button
+    const allDone=active.every(p=>confirmed.includes(p.id));
+    inner.appendChild(btn({
+      css:{width:"100%",padding:"13px",borderRadius:"11px",border:"none",background:allDone?"linear-gradient(135deg,#FF4655,#c62030)":"rgba(255,255,255,0.06)",color:allDone?"#fff":"rgba(255,255,255,0.22)",fontSize:"14px",fontWeight:"800",boxShadow:allDone?"0 4px 18px #FF465530":"none",marginBottom:"6px"},
+      dis:!allDone,
+      on:{click:()=>{
+        const vals=active.map(p=>parseInt(S.inputs[p.id]??"x"));
+        const zeros=vals.filter(v=>v===0).length;
+        if(!zeros){S.err="⚠️ يجب أن يكون هناك لاعب واحد بنتيجة 0 — من أنهى أوراقه";render();return;}
+        if(zeros>1){S.err="⚠️ لاعب واحد فقط يمكنه إنهاء أوراقه في كل جولة";render();return;}
+        S.err="";
+        S.players=S.players.map(p=>!p.active?p:{...p,scores:[...p.scores,parseInt(S.inputs[p.id])||0]});
+        S.inputs={};S.confirmed=[];S.picker=null;S.round++;
+        doSave();render();
+      }}
+    },allDone?["✓ تسجيل الجولة "+round]:["أدخل نقاط جميع اللاعبين ("+active.filter(p=>confirmed.includes(p.id)).length+"/"+active.length+")"]));
+
+    if(round>1){
+      inner.appendChild(btn({css:{width:"100%",padding:"9px",borderRadius:"10px",border:"1px solid rgba(255,255,255,0.08)",background:"transparent",color:"rgba(255,255,255,0.3)",fontSize:"12px"},on:{click:()=>{
+        S.players=S.players.map(p=>({...p,scores:p.scores.slice(0,-1)}));
+        S.confirmed=[];S.round--;doSave();render();
+      }}},["↩ تراجع عن الجولة "+(round-1)]));
+    }
+  }
+
+  // ── BOARD TAB
+  if(tab==="board"){
+    const mx=Math.max(...active.map(tot))||1;
+    byScore.forEach((p,rank)=>{
+      const rl=rankLabel(rank,active.length);
+      const total=tot(p);
+      inner.appendChild(div({css:{background:rl.bg,border:`1px solid ${p.color}26`,borderRadius:"13px",padding:"13px 15px",marginBottom:"8px",position:"relative",overflow:"hidden"}},[
+        div({css:{position:"absolute",bottom:"0",right:"0",width:((total/mx)*100)+"%",height:"3px",background:`linear-gradient(90deg,transparent,${p.color})`}}),
+        div({css:{display:"flex",alignItems:"center",gap:"10px"}},[
+          div({css:{fontSize:"26px"}},[rl.e]),
+          div({css:{flex:"1"}},[
+            div({css:{fontWeight:"800",fontSize:"15px"}},[p.name]),
+            div({css:{fontSize:"11px",color:rl.c,fontWeight:"700"}},[rl.t])
+          ]),
+          div({css:{textAlign:"left"}},[
+            div({css:{fontSize:"30px",fontWeight:"900",color:p.color,lineHeight:"1"}},[String(total)]),
+            div({css:{fontSize:"9px",color:"rgba(255,255,255,0.22)",textAlign:"center"}},["نقطة"])
+          ])
+        ]),
+        rank>0?div({css:{marginTop:"5px",fontSize:"10px",color:"rgba(255,255,255,0.27)"}},["يتأخر عن البطل بـ "+(total-tot(byScore[0]))+" نقطة"]):null
+      ]));
+    });
+    if(!active.length)inner.appendChild(div({css:{textAlign:"center",padding:"40px 0",color:"rgba(255,255,255,0.25)",fontSize:"13px"}},["ابدأ بتسجيل الجولات 🃏"]));
+  }
+
+  // ── HISTORY TAB
+  if(tab==="history"){
+    if(round===1){
+      inner.appendChild(div({css:{textAlign:"center",padding:"40px 0",color:"rgba(255,255,255,0.25)",fontSize:"13px"}},["لا توجد جولات بعد"]));
+    } else {
+      const tw=div({css:{overflowX:"auto",borderRadius:"10px",border:"1px solid rgba(255,255,255,0.07)"}});
+      const tbl=document.createElement("table");
+      tbl.style.cssText="width:100%;border-collapse:collapse;font-size:11px";
+      const thead=document.createElement("thead");
+      const hr=document.createElement("tr");
+      hr.style.background="rgba(255,255,255,0.05)";
+      const th0=document.createElement("th");
+      th0.textContent="ج";th0.style.cssText="padding:8px 9px;color:rgba(255,255,255,0.3);font-weight:700";
+      hr.appendChild(th0);
+      players.forEach(p=>{const th=document.createElement("th");th.textContent=p.name+(p.active?"":" ⏸");th.style.cssText=`padding:8px 9px;color:${p.active?p.color:"rgba(255,255,255,0.22)"};font-weight:800;white-space:nowrap`;hr.appendChild(th);});
+      thead.appendChild(hr);tbl.appendChild(thead);
+      const tbody=document.createElement("tbody");
+      for(let i=0;i<round-1;i++){
+        const tr=document.createElement("tr");
+        tr.style.cssText=`border-top:1px solid rgba(255,255,255,0.04);background:${i%2?"rgba(255,255,255,0.015)":"transparent"}`;
+        const td0=document.createElement("td");td0.textContent=i+1;td0.style.cssText="padding:6px 9px;text-align:center;color:rgba(255,255,255,0.3);font-weight:700";tr.appendChild(td0);
+        players.forEach(p=>{const td=document.createElement("td");td.textContent=p.scores[i]!==undefined?p.scores[i]:"—";td.style.cssText=`padding:6px 9px;text-align:center;font-weight:700;color:${p.scores[i]===0?"#00E676":"#fff"};opacity:${p.joinedAtRound>i+1?"0.3":"1"}`;tr.appendChild(td);});
+        tbody.appendChild(tr);
+      }
+      const sr=document.createElement("tr");sr.style.cssText="border-top:2px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03)";
+      const std=document.createElement("td");std.textContent="∑";std.style.cssText="padding:8px 9px;text-align:center;font-weight:800;color:rgba(255,255,255,0.4);font-size:10px";sr.appendChild(std);
+      players.forEach(p=>{const td=document.createElement("td");td.textContent=tot(p);td.style.cssText=`padding:8px 9px;text-align:center;font-weight:900;font-size:14px;color:${p.active?p.color:"rgba(255,255,255,0.25)"}`;sr.appendChild(td);});
+      tbody.appendChild(sr);tbl.appendChild(tbody);tw.appendChild(tbl);inner.appendChild(tw);
+    }
+  }
+
+  wrap.appendChild(inner);
+  return wrap;
+}
+
+function doSave(){
+  lsSave({players:S.players,round:S.round});
+  S.flash=true;
+  setTimeout(()=>{S.flash=false;render();},1800);
+}
+
+// Boot
+const sv=lsLoad();
+if(sv?.players?.length>0)S.saved=sv;
+render();
+</script>
+</body>
+</html>
